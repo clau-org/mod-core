@@ -73,7 +73,7 @@ jobs:
 
       # Replace the RUN_NAME placeholder with the actual value of the RUN_NAME environment variable
       - name: Set run name
-          run: sed -i "s/RUN_NAME/${{ env.RUN_NAME }}/g" $GITHUB_ACTION_PATH
+        run: sed -i "s/RUN_NAME/${{ env.RUN_NAME }}/g" $GITHUB_ACTION_PATH
   
       - name: Create Tag
         run: |
