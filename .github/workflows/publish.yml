@@ -13,7 +13,7 @@ on:
           - minor
           - major
 
-run-name: "${{ ginputs.version }}"
+run-name: "${{ inputs.version }}"
 
 env:
   NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -62,7 +62,7 @@ jobs:
           sed -i "s/\"version\": \"$VERSION\"/\"version\": \"$NEW_VERSION\"/g" deno.json
 
           # Set the run name to include the new version
-          echo "RUN_NAME=${{ ginputs.version }} - $NEW_VERSION" >> $GITHUB_ENV
+          echo "RUN_NAME=${{ inputs.version }} - $NEW_VERSION" >> $GITHUB_ENV
 
           # Commit the updated version and push the changes
           git config --global user.email "github-actions@github.com"
