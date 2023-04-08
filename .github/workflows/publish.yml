@@ -72,10 +72,11 @@ jobs:
 
       # Replace the RUN_NAME placeholder with the actual value of the RUN_NAME environment variable
       - name: Set run name
+        needs: update_version
         run: |
           sed -i "s/RUN_NAME/${{ env.RUN_NAME }}/g" "${{ github.workspace }}/.github/workflows/publish.yml"
 
-  
+
       - name: Create Tag
         run: |
           git config --global user.email "github-actions@github.com"
