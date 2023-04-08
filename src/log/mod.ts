@@ -1,5 +1,5 @@
 // Import Colors module from the deno standard library and define the ILogger interface
-import { Colors } from "../deps.ts";
+import { Colors } from "../../deps.ts";
 
 interface ILogger {
   debug(message: string, ...args: any[]): void;
@@ -58,11 +58,11 @@ export class Logger implements ILogger {
     LOG_PREFIX = `[${LOG_PREFIX}]`;
 
     // Apply formatting to each argument
-    const logArgs = args.map((arg) => {
+    let logArgs = args.map((arg) => {
       if (typeof arg === "object" && arg !== null) {
         try {
           return JSON.stringify(arg, null, 2);
-        } catch (_e) {
+        } catch (e) {
           return arg;
         }
       } else if (
@@ -128,3 +128,5 @@ export class Logger implements ILogger {
     this.prefix = prefix;
   }
 }
+
+export const logger = new Logger({ prefix: "CLAU" });
