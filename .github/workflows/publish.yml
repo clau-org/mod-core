@@ -24,7 +24,6 @@ jobs:
   publish:
     name: Publish release
     runs-on: ubuntu-latest
-    if: "!contains(github.event.head_commit.message, '[skip]')"
 
     steps:
       - name: Checkout code 📁
@@ -61,21 +60,13 @@ jobs:
           NEW_VERSION="$MAJOR.$MINOR.$PATCH"
           sed -i "s/\"version\": \"$VERSION\"/\"version\": \"$NEW_VERSION\"/g" deno.json
 
-          # Set the run name to include the new version
-          echo "RUN_NAME=${{ inputs.version }} - $NEW_VERSION" >> $GITHUB_ENV
-
-          # Commit the updated version and push the changes
+          # Commit the updated version
           git config --global user.email "github-actions@github.com"
           git config --global user.name "GitHub Actions"
           git commit -a -m "Bump version to $NEW_VERSION"
+
+          # Pass new version
           echo "::set-output name=new_version::$NEW_VERSION"
-
-      # Replace the RUN_NAME placeholder with the actual value of the RUN_NAME environment variable
-      - name: Set run name
-        needs: update_version
-        run: |
-          sed -i "s/RUN_NAME/${{ env.RUN_NAME }}/g" "${{ github.workspace }}/.github/workflows/publish.yml"
-
 
       - name: Create Tag
         run: |
@@ -85,8 +76,7 @@ jobs:
           git push origin v${{ steps.update_version.outputs.new_version }}
           git push
 
-
-      - name: Create Release
+      - name: Create version release
         id: create_release
         uses: actions/create-release@v1
         env:
@@ -94,5 +84,16 @@ jobs:
         with:
           tag_name: v${{ steps.update_version.outputs.new_version }}
           release_name: Release v${{ steps.update_version.outputs.new_version }}
+          draft: false
+          prerelease: false
+
+      - name: Create latest release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: latest
+          release_name: Release latest
           draft: false
           prerelease: false
