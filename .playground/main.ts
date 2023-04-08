@@ -1,15 +1,7 @@
-import { API } from '../mod.ts';
-import { helloRouter } from './routers/hello.ts';
+import { Logger } from "../mod.ts";
 
-const api = new API({
-	name: 'api-core',
-	someKey: '',
-});
-
-api.addRouter(helloRouter);
-
-api.setDBUrl({
-	url: 'prisma://aws-us-east-1.prisma-data.com/?api_key=mY4engKpoOtH3QVxb9NWeTZ_NWpEeoT6CcLwsDAtpsefXTby_mpAjYXQj1qLL0yF',
-});
-
-await api.listen();
+const logger = new Logger({ prefix: "PLAYGROUND" });
+logger.debug("Hello, world!");
+logger.info("Hello, world!");
+logger.warn("Hello, world!");
+logger.error("Hello, world!");
