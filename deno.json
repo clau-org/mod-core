@@ -1,16 +1,10 @@
 {
-  "version": "0.0.11",
+  "name": "mod-core",
+  "version": "0.0.0",
   "tasks": {
     "dev": "deno run -A --watch .playground/main.ts",
     "test": "deno test -A",
     "test:dev": "deno test -A --watch",
-    "preview": "deno run -A .playground/main.ts",
-    "prisma": "deno run -A npm:prisma@latest generate --data-proxy --schema=./src/database/schema.prisma",
-    "prisma:push": "deno run -A npm:prisma@latest db push --schema=./src/schema/schema.prisma"
-  },
-  "fmt": {
-    "files": {
-      "exclude": ["./src/database/generated"]
-    }
+    "preview": "deno run -A .playground/main.ts"
   }
 }
