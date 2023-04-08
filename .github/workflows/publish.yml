@@ -61,6 +61,9 @@ jobs:
           NEW_VERSION="$MAJOR.$MINOR.$PATCH"
           sed -i "s/\"version\": \"$VERSION\"/\"version\": \"$NEW_VERSION\"/g" deno.json
 
+          # Set the run name to include the new version
+          echo "RUN_NAME=[${{ github.ref == 'refs/heads/main' && inputs.version || 'patch' }}] - $NEW_VERSION" >> $GITHUB_ENV
+
           # Commit the updated version and push the changes
           git config --global user.email "github-actions@github.com"
           git config --global user.name "GitHub Actions"
@@ -68,6 +71,10 @@ jobs:
           git push
           echo "::set-output name=new_version::$NEW_VERSION"
 
+      # Replace the RUN_NAME placeholder with the actual value of the RUN_NAME environment variable
+      - name: Set run name
+          run: sed -i "s/RUN_NAME/${{ env.RUN_NAME }}/g" $GITHUB_ACTION_PATH
+  
       - name: Create Tag
         run: |
           git config --global user.email "github-actions@github.com"
