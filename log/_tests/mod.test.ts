@@ -1,4 +1,4 @@
-import { Logger, LogLevels } from "./mod.ts";
+import { Logger, LogLevels } from "../mod.ts";
 
 Deno.test("LOG MOD", () => {
   const logger = new Logger();
