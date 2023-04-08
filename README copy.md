@@ -1,6 +1,8 @@
 # mod-core
 
-## Development
+## Tasks
+
+### Development
 
 To run this module in development mode run:
 
@@ -8,7 +10,7 @@ To run this module in development mode run:
 deno task dev
 ```
 
-## Test
+### Test
 
 To run the test for this module run:
 
@@ -24,7 +26,7 @@ To run the test for this module in development mode run:
 deno task test:dev
 ```
 
-## Preview
+### Preview
 
 To preview this module run:
 
@@ -32,33 +34,31 @@ To preview this module run:
 deno task preview
 ```
 
-## Change schema
-
-To update this module schema run:
-
-```
-deno task prisma
-```
-
-## Push schema changes to DB
-
-To push the schema changes of this module run:
-
-```
-deno task prisma:push
-```
-
 ## Release
 
-To release a new `patch` version push to main. To any type of release go to the
-repo under actions publish release select.
-
-To skip a release add `[skip]` to the commit message
+The deployment of the releases are manually through github actions
 
 ## Usage
+
+## Deno and browser
 
 To use the module in any deno script
 
 ```ts
-import { Logger } "https://cdn.jsdelivr.net/gh/clau-org/api-core@latest/src/log.ts"
+import { Logger } "https://raw.githubusercontent.com/clau-org/mod-core/TAG/mod.ts"
+```
+
+## Node
+
+To use the module in any node script
+
+Install
+
+```ts
+npm i "@clau-org/mod-core"
+```
+
+Use
+```ts
+import { Logger } "@clau-org/mod-core"
 ```
