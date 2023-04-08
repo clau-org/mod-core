@@ -13,7 +13,7 @@ on:
           - minor
           - major
 
-run-name: "${{ inputs.version }}"
+run-name: "New '${{ inputs.version }}' by ${{ github.actor }}"
 
 env:
   NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -63,7 +63,7 @@ jobs:
           # Commit the updated version
           git config --global user.email "github-actions@github.com"
           git config --global user.name "GitHub Actions"
-          git commit -a -m "Bump version to $NEW_VERSION"
+          git commit -a -m "Bump version to $NEW_VERSION by ${{ github.actor }}"
 
           # Pass new version
           echo "::set-output name=new_version::$NEW_VERSION"
