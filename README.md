@@ -7,10 +7,10 @@
 import {
   Logger,
   LogLevels,
-} from "https://raw.githubusercontent.com/clau-org/mod-core/v0.0.1/log/mod.ts";
+} from "https://raw.githubusercontent.com/clau-org/mod-core/latest/log/mod.ts";
 
 // import from main module
-import { LOG } from "https://raw.githubusercontent.com/clau-org/mod-core/v0.0.1/mod.ts";
+import { LOG } from "https://raw.githubusercontent.com/clau-org/mod-core/latest/mod.ts";
 const { Logger, LogLevels } = LOG;
 
 // import locally
