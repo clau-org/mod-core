@@ -2,15 +2,14 @@ import {
   middlewareRequestData,
   Service,
   ServiceContext,
-  // ServiceOptions,
   ServiceRouter,
-} from "../../svc/mod.ts";
+} from "./deps.ts";
 
 const service = new Service();
 
 const serviceRouter = new ServiceRouter();
 
-serviceRouter.all("/", middlewareRequestData(), (ctx) => {
+serviceRouter.all("/", middlewareRequestData(), async (ctx) => {
   const { logger, config } = ctx.app.state as ServiceContext;
   const { requestData } = ctx.state;
 
@@ -25,4 +24,4 @@ serviceRouter.all("/", middlewareRequestData(), (ctx) => {
 
 service.addRouter(serviceRouter);
 
-await service.listen();
+export { service };

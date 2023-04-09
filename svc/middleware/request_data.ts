@@ -1,7 +1,7 @@
 import { getQuery, Middleware, Schema, ZodError } from "../deps.ts";
 
 // Define a middlewareRequestData function that returns a Middleware
-function middlewareRequestData({ schema }: { schema?: Schema } = {}) {
+function middlewareRequestData(schema?: Schema) {
   const middleware: Middleware = async (ctx, next): Promise<any> => {
     const { logger } = ctx.app.state;
 

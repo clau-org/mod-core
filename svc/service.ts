@@ -5,16 +5,18 @@ import {
   ConfigOptions,
   Logger,
   LogLevels,
+  Middleware,
   oakCors,
   Router,
 } from "./deps.ts";
 import { middlewareError } from "./middleware/error.ts";
+import { DBClient } from "./database/client.ts";
 
 // Define types for API context and configuration
 export interface ServiceContext {
   logger: Logger;
   config: Config;
-  //   dbClient?: DBClient;
+  db: DBClient;
 }
 
 export interface ServiceOptions extends ConfigOptions {
@@ -25,15 +27,56 @@ export interface ServiceOptions extends ConfigOptions {
   [key: string]: any;
 }
 
+export interface ServiceRouteOptions {
+  middlewares?: Middleware[];
+  handler?: Function;
+}
+
+const defaultHandler: Middleware = (ctx) => {
+  const { logger } = ctx.app.state as ServiceContext;
+
+  logger.info("defaultHandler");
+
+  ctx.response.body = "defaultHandler";
+};
+export class ServiceRoute {
+  path: string;
+  middlewares: Middleware[];
+  handler: Function;
+
+  constructor(path: string, options?: ServiceRouteOptions) {
+    this.path = path;
+    this.middlewares = options?.middlewares ?? [];
+    this.handler = options?.handler ?? defaultHandler;
+  }
+
+  addMiddleware(middleware: Middleware) {
+    this.middlewares.push(middleware);
+  }
+
+  setHandler(middleware: Middleware) {
+    this.handler = middleware;
+  }
+}
+
 // Define a custom router that extends Oak's Router
-export class ServiceRouter extends Router {}
+export class ServiceRouter extends Router {
+  addRoute(route: ServiceRoute) {
+    this.all(
+      route.path, 
+      // @ts-ignore
+      ...route.middlewares, 
+      route.handler
+    );
+  }
+}
 
 // Define an API class that uses Oak and the custom router
 export class Service {
   app?: Application<ServiceContext>;
   routers: ServiceRouter[];
   logger: Logger;
-  //   dbClient?: DBClient;
+  db?: DBClient;
 
   options?: ServiceOptions;
   config: Config;
@@ -43,7 +86,6 @@ export class Service {
       name = "service",
       dbUrl,
       logLevel = LogLevels.DEBUG,
-
       allowEmptyValues,
       defaultsPath,
       denoJsonPath,
@@ -73,13 +115,7 @@ export class Service {
     });
 
     // Create a DBClient instance if exist dbUrl
-    // if (dbUrl) {
-    //   this.dbClient = new DBClient({
-    //     datasources: {
-    //       db: { url: dbUrl },
-    //     },
-    //   });
-    // }
+    if (dbUrl) this.db = new DBClient(dbUrl);
 
     // Create an empty array to store the routers
     this.routers = [];
@@ -95,11 +131,10 @@ export class Service {
     );
   }
 
-  // Set dbUrl on DBClient and initialize the client
-  //   setDBUrl({ url }: { url: string }) {
-  //     this.dbClient = new DBClient({ datasources: { db: { url } } });
-  //     this.logger.debug(`[method: dbUrl][db url changed]`, { url });
-  //   }
+  setDbUrl(url: string) {
+    if (this.db) this.db!.setUrl(url);
+    else this.db = new DBClient(url);
+  }
 
   async setupService() {
     const { logger } = this;
@@ -112,8 +147,8 @@ export class Service {
     // Set application context
     const state: ServiceContext = {
       logger: this.logger,
-      config: this.config
-      //   dbClient: this.dbClient,
+      config: this.config,
+      db: this.db,
     };
 
     this.app.state = state;
