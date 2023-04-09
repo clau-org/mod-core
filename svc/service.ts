@@ -1,14 +1,23 @@
 // Import required modules
-import { Application, oakCors, Router, Logger, LogLevels } from "./deps.ts";
+import {
+  Application,
+  Config,
+  ConfigOptions,
+  Logger,
+  LogLevels,
+  oakCors,
+  Router,
+} from "./deps.ts";
 import { middlewareError } from "./middleware/error.ts";
 
 // Define types for API context and configuration
 export interface ServiceContext {
   logger: Logger;
+  config: Config;
   //   dbClient?: DBClient;
 }
 
-export interface ServiceOptions {
+export interface ServiceOptions extends ConfigOptions {
   name?: string;
   port?: number;
   logLevel?: LogLevels;
@@ -26,17 +35,34 @@ export class Service {
   logger: Logger;
   //   dbClient?: DBClient;
 
-  config?: ServiceOptions;
+  options?: ServiceOptions;
+  config: Config;
 
   constructor(options?: ServiceOptions) {
     const {
       name = "service",
       dbUrl,
       logLevel = LogLevels.DEBUG,
+
+      allowEmptyValues,
+      defaultsPath,
+      denoJsonPath,
+      envPath,
+      examplePath,
+      restrictEnvAccessTo,
     } = options ?? {};
 
     // Save the configuration options
-    this.config = options;
+    this.options = options;
+
+    this.config = new Config({
+      allowEmptyValues,
+      defaultsPath,
+      denoJsonPath,
+      envPath,
+      examplePath,
+      restrictEnvAccessTo,
+    });
 
     // Create a logger instance with the API name as prefix
     this.logger = new Logger({
@@ -75,8 +101,10 @@ export class Service {
   //     this.logger.debug(`[method: dbUrl][db url changed]`, { url });
   //   }
 
-  setupService() {
+  async setupService() {
     const { logger } = this;
+
+    await this.config.setup();
 
     // Create a new Oak application instance
     this.app = new Application<ServiceContext>();
@@ -84,6 +112,7 @@ export class Service {
     // Set application context
     const state: ServiceContext = {
       logger: this.logger,
+      config: this.config
       //   dbClient: this.dbClient,
     };
 
@@ -130,19 +159,19 @@ export class Service {
         url,
       };
 
-      logger.debug("[service.listen]", "service config", {
-        config: this.config ?? [],
+      logger.debug("[service.listen]", "service options", {
+        options: this.options ?? [],
       });
       logger.info("[service.listen]", "service listening data", { service });
     });
   }
 
-  listen({ port }: { port?: number } = {}) {
-    this.setupService();
+  async listen({ port }: { port?: number } = {}) {
+    await this.setupService();
 
     this.addEventListener();
 
-    const listenPort = port ?? this.config?.port ?? 8000;
+    const listenPort = port ?? this.options?.port ?? 8000;
     return this.app?.listen({ port: listenPort });
   }
 }

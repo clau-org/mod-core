@@ -11,7 +11,7 @@ const service = new Service();
 const serviceRouter = new ServiceRouter();
 
 serviceRouter.all("/", middlewareRequestData(), (ctx) => {
-  const { logger } = ctx.app.state as ServiceContext;
+  const { logger, config } = ctx.app.state as ServiceContext;
   const { requestData } = ctx.state;
 
   logger.debug("some");
@@ -19,9 +19,10 @@ serviceRouter.all("/", middlewareRequestData(), (ctx) => {
   ctx.response.body = {
     message: "hello",
     requestData,
+    config
   };
 });
 
 service.addRouter(serviceRouter);
 
-service.listen();
+await service.listen();
