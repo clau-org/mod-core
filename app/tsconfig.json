@@ -1,3 +1,0 @@
-{
-  "extends": "../_playground/app/.nuxt/tsconfig.json"
-}

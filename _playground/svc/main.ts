@@ -4,7 +4,7 @@ import {
   ServiceContext,
   // ServiceOptions,
   ServiceRouter,
-} from "../../service/mod.ts";
+} from "../../svc/mod.ts";
 
 const service = new Service();
 
