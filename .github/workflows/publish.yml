@@ -6,9 +6,8 @@ on:
       - main
     paths-ignore:
       - '**.md'
-      - '**.vue'
+      - '.gitignore'
       - '_playground/**'
-      - 'application/**'
       - '.vscode/**'
   workflow_dispatch:
     inputs:
@@ -109,30 +108,3 @@ jobs:
           release_name: Release v${{ steps.update_version.outputs.new_version }}
           draft: false
           prerelease: false
-
-      # - name: Delete existing latest tag
-      #   run: |
-      #     git config --global user.email "github-actions@github.com"
-      #     git config --global user.name "GitHub Actions"
-      #     git fetch --tags
-      #     git tag -d latest || echo "Tag 'latest' not found locally."
-      #     git push --delete origin latest || echo "Tag 'latest' not found on remote."
-
-
-      # - name: Create latest release
-      #   run: |
-      #     git config --global user.email "github-actions@github.com"
-      #     git config --global user.name "GitHub Actions"
-      #     git tag -a -m "Latest release" latest v${{ steps.update_version.outputs.new_version }}
-      #     git push origin latest
-
-      # - name: Create latest release on GitHub
-      #   uses: actions/create-release@v1
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #   with:
-      #     tag_name: latest
-      #     release_name: Release latest
-      #     draft: false
-      #     prerelease: false
-
