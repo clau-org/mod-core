@@ -16,7 +16,7 @@ import { DBClient } from "./database/client.ts";
 export interface ServiceContext {
   logger: Logger;
   config: Config;
-  db: DBClient;
+  db?: DBClient;
 }
 
 export interface ServiceOptions extends ConfigOptions {

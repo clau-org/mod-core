@@ -17,7 +17,7 @@ const middlewareDbExist = (
     next: any,
   ) => {
     const { logger, db } = ctx.app.state as ServiceContext;
-    const model = db[modelName]
+    const model = db![modelName]
     const { uuid, id } = ctx.state.requestData;
 
     const document = await model.findFirst({

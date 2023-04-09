@@ -1,4 +1,4 @@
-import { assertEquals, superoak } from "../../deps_tests.ts";
+import { assertEquals, superoak } from "../deps.tests.ts";
 // import { api } from "../../src/api.ts"; // Import the router from the provided code
 
 // api.setupApp();

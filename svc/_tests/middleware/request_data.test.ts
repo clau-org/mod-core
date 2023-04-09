@@ -15,7 +15,7 @@ Deno.test(
     const logger: any = { debug: () => {}, error: () => {} };
 
     // Create validate middleware using the schema
-    const middleware = middlewareRequestData({ schema });
+    const middleware = middlewareRequestData(schema);
 
     // Define a mock next middleware function
     const mockNext = async () => {};
@@ -67,7 +67,7 @@ Deno.test(
     const logger: any = { debug: () => {}, error: () => {} };
 
     // Create validate middleware using the schema
-    const middleware = middlewareRequestData({ schema });
+    const middleware = middlewareRequestData(schema);
 
     // Define a mock next middleware function
     const mockNext = async () => {};
