@@ -34,4 +34,4 @@ const command2 = new CliCommand("command2", {
 cli.addCommand(command1);
 cli.addCommand(command2);
 
-cli.run();
+await cli.run();
