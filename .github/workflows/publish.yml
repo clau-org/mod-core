@@ -1,6 +1,13 @@
 name: Publish release
 
 on:
+ push:
+    branches:
+      - main
+    paths-ignore:
+      - '**.md'
+      - '_playground/**'
+      - '.vscode/**'
   workflow_dispatch:
     inputs:
       version:
@@ -24,6 +31,7 @@ jobs:
   publish:
     name: Publish release
     runs-on: ubuntu-latest
+    if: "contains(github.event.head_commit.message, '[release patch]') || contains(github.event.head_commit.message, '[release minor]') || contains(github.event.head_commit.message, '[release major]') || github.event_name == 'workflow_dispatch'"
 
     steps:
       - name: Checkout code 📁
@@ -36,6 +44,20 @@ jobs:
 
       - name: Test
         run: deno task test
+
+      - name: Extract version from commit message
+        id: extract_version
+        if: "github.event_name == 'push'"
+        run: |
+          VERSION=$(echo "${{ github.event.head_commit.message }}" | grep -oP '\[release \K(patch|minor|major)')
+          echo "::set-output name=version::$VERSION"
+
+      - name: Set version for workflow_dispatch
+        id: set_version
+        if: "github.event_name == 'workflow_dispatch'"
+        run: |
+          echo "::set-output name=version::${{ github.event.inputs.version }}"
+
 
       - name: Update version
         id: update_version
@@ -50,7 +72,7 @@ jobs:
           PATCH=${VERSION_PARTS[2]}
 
           # Increment the version based on the input parameter
-          case "${{ github.event.inputs.version }}" in
+          case "${{ steps.extract_version.outputs.version }}${{ steps.set_version.outputs.version }}" in
             "major") MAJOR=$((MAJOR + 1)); MINOR=0; PATCH=0;;
             "minor") MINOR=$((MINOR + 1)); PATCH=0;;
             *) PATCH=$((PATCH + 1));;
