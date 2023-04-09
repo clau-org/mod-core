@@ -1,11 +1,8 @@
-import {
-  config as configEnv,
-  ConfigOptions as ConfigEnvOptions,
-} from "./deps.ts";
-import {} from "https://deno.land/std@0.182.0/fs/mod.ts";
+import { LoadOptions, loadSync } from "./deps.ts";
+
 export const DEFAULT_DENO_JSON_PATH = "./deno.json";
 
-export interface ConfigOptions extends ConfigEnvOptions {
+export interface ConfigOptions extends LoadOptions {
   denoJsonPath?: string;
 }
 
@@ -18,7 +15,7 @@ export class Config {
     const { denoJsonPath, ...envOptions } = options ?? {};
     let denoJson = null;
 
-    this.env = configEnv(envOptions);
+    this.env = loadSync(envOptions);
     this.options = options;
     this.denoJson = denoJson;
   }

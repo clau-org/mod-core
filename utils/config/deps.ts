@@ -1,4 +1,1 @@
-export {
-  config,
-  type ConfigOptions,
-} from "https://deno.land/x/dotenv@v3.2.2/mod.ts";
+export { load, type LoadOptions, loadSync} from "https://deno.land/std@0.182.0/dotenv/mod.ts";
