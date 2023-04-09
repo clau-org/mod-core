@@ -7,12 +7,9 @@
 import {
   Logger,
   LogLevels,
-} from "https://raw.githubusercontent.com/clau-org/mod-core/latest/log/mod.ts";
+} from "https://deno.land/x/mod_core/log/mod.ts";
 
 // import from main module
-import { LOG } from "https://raw.githubusercontent.com/clau-org/mod-core/latest/mod.ts";
+import { LOG } from "https://deno.land/x/mod_core/log/mod.ts";
 const { Logger, LogLevels } = LOG;
-
-// import locally
-import { Logger, LogLevels } from "../../log/mod.ts";
 ```
