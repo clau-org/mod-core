@@ -1,7 +1,5 @@
 // Import required modules
-
-import { Application, oakCors, Router } from "./deps.ts";
-import { Logger, LogLevels } from "../log/mod.ts";
+import { Application, oakCors, Router, Logger, LogLevels } from "./deps.ts";
 import { middlewareError } from "./middleware/error.ts";
 
 // Define types for API context and configuration

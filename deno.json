@@ -1,10 +1,16 @@
 {
   "name": "mod-core",
-  "version": "0.1.0",
+  "version": "0.0.1",
   "tasks": {
-    "dev": "deno run -A --watch _playground/main.ts",
-    "test": "deno test -A",
-    "test:dev": "deno test -A --watch",
-    "preview": "deno run -A _playground/main.ts"
+    "dev:app": "cd _playground/app && npm run dev",
+    "dev:svc": "deno run -A --watch _playground/svc/main.ts",
+    "dev:cli": "deno run -A _playground/cli/main.ts",
+    "test:svc": "deno test -A svc",
+    "test:cli": "deno test -A cli",
+    "test:utils": "deno test -A utils",
+    "preview:app": "cd _playground/app && npm run preview",
+    "preview:svc": "deno run -A _playground/svc/main.ts",
+    "preview:cli": "deno run -A _playground/cli/main.ts",
+    "dev": "deno task dev:app && deno task dev:svc"
   }
 }

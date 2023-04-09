@@ -1,0 +1,17 @@
+{
+  "type": "module",
+  "main": "./nuxt.config.ts",
+  "scripts": {
+    "dev": "nuxi dev .",
+    "build": "nuxt build .",
+    "generate": "nuxt generate .",
+    "preview": "nuxt preview .",
+    "prepare": "nuxt prepare ."
+  },
+  "devDependencies": {
+    "@nuxt/eslint-config": "^0.1.1",
+    "eslint": "^8.28.0",
+    "nuxt": "^3.0.0",
+    "typescript": "^4.9.3"
+  }
+}

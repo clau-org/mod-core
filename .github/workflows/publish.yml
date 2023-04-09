@@ -6,7 +6,9 @@ on:
       - main
     paths-ignore:
       - '**.md'
+      - '**.vue'
       - '_playground/**'
+      - 'application/**'
       - '.vscode/**'
   workflow_dispatch:
     inputs:
