@@ -90,8 +90,10 @@ jobs:
         run: |
           git config --global user.email "github-actions@github.com"
           git config --global user.name "GitHub Actions"
-          git tag -d latest
-          git push --delete origin latest
+          git fetch --tags
+          git tag -d latest || echo "Tag 'latest' not found locally."
+          git push --delete origin latest || echo "Tag 'latest' not found on remote."
+
 
       - name: Create latest release
         run: |
