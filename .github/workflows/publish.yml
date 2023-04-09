@@ -20,7 +20,7 @@ on:
           - minor
           - major
 
-run-name: "'${{ inputs.version }}' by ${{ github.actor }}"
+run-name: "Release by ${{ github.actor }}"
 
 env:
   NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
