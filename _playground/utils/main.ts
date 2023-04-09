@@ -4,6 +4,8 @@ const logger = new Logger();
 
 const config = new Config();
 
+await config.setup();
+
 logger.log({
   config,
 });
