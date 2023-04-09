@@ -86,7 +86,21 @@ jobs:
           draft: false
           prerelease: false
 
+      - name: Delete existing latest tag
+        run: |
+          git config --global user.email "github-actions@github.com"
+          git config --global user.name "GitHub Actions"
+          git tag -d latest
+          git push --delete origin latest
+
       - name: Create latest release
+        run: |
+          git config --global user.email "github-actions@github.com"
+          git config --global user.name "GitHub Actions"
+          git tag -a -m "Latest release" latest v${{ steps.update_version.outputs.new_version }}
+          git push origin latest
+
+      - name: Create latest release on GitHub
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -95,3 +109,4 @@ jobs:
           release_name: Release latest
           draft: false
           prerelease: false
+
