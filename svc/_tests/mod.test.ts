@@ -27,7 +27,7 @@ Deno.test("service should setup service", async () => {
   service.addRouter(serviceRouter);
 
   // Call the setupService method on the service instance
-  service.setupService();
+  await service.setupService();
 
   // Assert that the app property of the API instance is truthy
   assert(service.app);
