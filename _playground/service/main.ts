@@ -1,19 +1,3 @@
-/*
-
-// HOW TO IMPORT
-
-// import from own module
-import { } from "https://raw.githubusercontent.com/clau-org/mod-core/v0.0.2/service/mod.ts";
-
-// import from main module
-import { SERVICE } from "https://raw.githubusercontent.com/clau-org/mod-core/v0.0.1/mod.ts";
-const {  } = SERVICE;
-
-// import locally
-import {  } from "../../service/mod.ts";
-
-*/
-
 import {
   middlewareRequestData,
   Service,
