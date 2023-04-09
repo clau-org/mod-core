@@ -1,4 +1,4 @@
-/*  
+/*
 
 // HOW TO IMPORT
 
@@ -15,11 +15,11 @@ import {  } from "../../service/mod.ts";
 */
 
 import {
+  middlewareRequestData,
   Service,
   ServiceContext,
   // ServiceOptions,
   ServiceRouter,
-  middlewareRequestData,
 } from "../../service/mod.ts";
 
 const service = new Service();

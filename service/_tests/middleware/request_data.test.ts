@@ -51,7 +51,7 @@ Deno.test(
       name: "Alice",
       age: 30,
     });
-  }
+  },
 );
 
 Deno.test(
@@ -101,5 +101,5 @@ Deno.test(
 
     // Assert that the response status is 400 (Bad Request)
     assertEquals(mockCtx.response.status, 400);
-  }
+  },
 );

@@ -110,11 +110,12 @@ export class Service {
   addEventListener() {
     const { logger } = this;
 
-    if (!this.app)
+    if (!this.app) {
       return logger.error(
         "[service.addEventListener]",
-        "service its not setup"
+        "service its not setup",
       );
+    }
 
     // Listen for the "listen" event and log when the App starts
     this.app.addEventListener("listen", ({ port, secure, hostname }) => {

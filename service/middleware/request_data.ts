@@ -1,4 +1,4 @@
-import { Middleware, getQuery, Schema, ZodError } from "../deps.ts";
+import { getQuery, Middleware, Schema, ZodError } from "../deps.ts";
 
 // Define a middlewareRequestData function that returns a Middleware
 function middlewareRequestData({ schema }: { schema?: Schema } = {}) {
