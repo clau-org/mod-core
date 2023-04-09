@@ -1,4 +1,4 @@
-import { LoadOptions, loadSync } from "./deps.ts";
+import { load, LoadOptions } from "./deps.ts";
 
 export const DEFAULT_DENO_JSON_PATH = "./deno.json";
 
@@ -12,20 +12,20 @@ export class Config {
   options?: ConfigOptions;
 
   constructor(options?: ConfigOptions) {
-    const { denoJsonPath, ...envOptions } = options ?? {};
-    let denoJson = null;
-
-    this.env = loadSync(envOptions);
-    this.options = options;
-    this.denoJson = denoJson;
+    this.options = options ?? {};
   }
 
   async setup() {
+    const { denoJsonPath, ...envOptions } = this.options ?? {};
     try {
       const jsonTxt = await Deno?.readTextFile?.(
-        this.options?.denoJsonPath ?? DEFAULT_DENO_JSON_PATH,
+        denoJsonPath ?? DEFAULT_DENO_JSON_PATH,
       );
       this.denoJson = JSON.parse(jsonTxt);
+    } catch (_e) {}
+
+    try {
+      this.env = await load(envOptions);
     } catch (_e) {}
   }
 }
