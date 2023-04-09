@@ -1,6 +1,6 @@
 {
   "name": "mod-core",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "tasks": {
     "dev": "deno run -A --watch _playground/main.ts",
     "test": "deno test -A",
