@@ -27,8 +27,8 @@ const handler: Middleware = async (ctx) => {
   if (!user) {
     // If user not requested, get all users
     const skip = (page - 1) * pageSize;
-    users = await db.users.findMany({ skip, take: pageSize });
-    maxPage = Math.ceil((await db.users.count()) / pageSize);
+    users = await db!.users.findMany({ skip, take: pageSize });
+    maxPage = Math.ceil((await db!.users.count()) / pageSize);
     logger.debug("[/users/read]", "users readed");
   }
 

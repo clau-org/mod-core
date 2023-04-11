@@ -23,7 +23,7 @@ const handler: Middleware = async (ctx) => {
   const { id, uuid, ...userData } = ctx.state.requestData;
 
   if (user) {
-    user = await db.users.update({
+    user = await db!.users.update({
       where: { id: user.id },
       data: { ...userData },
     });

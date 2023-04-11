@@ -11,7 +11,9 @@ export {
   type ServiceOptions,
   ServiceRouter,
   ServiceRoute
-} from "../../../../svc/mod.ts";
+} from "https://github.com/clau-org/mod-core/raw/v0.0.8/svc/mod.ts";
+
+// from "../../../../svc/mod.ts";
 export {
   Context,
   type Middleware,
