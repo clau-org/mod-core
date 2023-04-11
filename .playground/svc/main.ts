@@ -1,8 +1,7 @@
 import {
-  middlewareRequestData,
   Service,
-  ServiceContext,
-  // ServiceOptions,
+  ServiceState,
+  ServiceRoute,
   ServiceRouter,
 } from "../../svc/mod.ts";
 
@@ -10,11 +9,14 @@ const service = new Service();
 
 const serviceRouter = new ServiceRouter();
 
-serviceRouter.all("/", middlewareRequestData(), (ctx) => {
-  const { logger, config } = ctx.app.state as ServiceContext;
+const serviceRoute = new ServiceRoute("/");
+serviceRoute.setHandler((ctx) => {
+  const { logger, config } = ctx.app.state as ServiceState;
   const { requestData } = ctx.state;
 
-  logger.debug("some");
+  config.setup();
+
+  logger.debug("hello");
 
   ctx.response.body = {
     message: "hello",
@@ -23,6 +25,7 @@ serviceRouter.all("/", middlewareRequestData(), (ctx) => {
   };
 });
 
+serviceRouter.addRoute(serviceRoute);
 service.addRouter(serviceRouter);
 
-await service.listen();
+export { service };

@@ -1,9 +1,10 @@
-import { load, LoadOptions } from "./deps.ts";
+import { load } from "./deps.ts";
 
 export const DEFAULT_DENO_JSON_PATH = "./deno.json";
 
-export interface ConfigOptions extends LoadOptions {
+export interface ConfigOptions {
   denoJsonPath?: string;
+  envPath?: string
 }
 
 export class Config {

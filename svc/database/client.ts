@@ -1,19 +1,28 @@
-import { PrismaClient } from "./generated/client/deno/edge.ts";
+/*
+const DBClient = ExtendDBClient(PrismaClient);
 
-// export interface DBClientOptions {
-//   url?: string;
-// }
+const db = new DBClient();
+*/
 
-export class DBClient extends PrismaClient {
-  client?: PrismaClient;
-  [key: string]: any; // add index signature to allow string keys
-  constructor(url?: string) {
-    if (url) super({ datasources: { db: { url } } })
-    else super()
-  }
+type Constructor<T> = new (...args: any[]) => T;
 
-  setUrl(url: string) {
-    const newClient = new DBClient(url);
-    Object.assign(this, newClient);
-  }
+function createDBClient<T extends Constructor<any>>(
+  ClientClass: T,
+): T & Constructor<DBClientFunctions> {
+  return class extends ClientClass {
+    constructor(...args: any[]) {
+      super(...args);
+    }
+
+    setUrl(url: string) {
+      const newClient = new (this.constructor as any)({
+        datasources: { db: { url } },
+      });
+      Object.assign(this, newClient);
+    }
+  };
+}
+
+interface DBClientFunctions {
+  setUrl(url: string): void;
 }

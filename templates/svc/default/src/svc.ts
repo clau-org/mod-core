@@ -1,19 +1,26 @@
 import {
-  middlewareRequestData,
   Service,
-  ServiceContext,
+  ServiceRoute,
   ServiceRouter,
+  ServiceState,
+  z,
 } from "./deps.ts";
 
 const service = new Service();
 
 const serviceRouter = new ServiceRouter();
 
-serviceRouter.all("/", middlewareRequestData(), async (ctx) => {
-  const { logger, config } = ctx.app.state as ServiceContext;
+const serviceRoute = new ServiceRoute("/");
+serviceRoute.setSchema(z.object({
+  hello: z.string(),
+}));
+serviceRoute.setHandler((ctx) => {
+  const { logger, config } = ctx.app.state as ServiceState;
   const { requestData } = ctx.state;
 
-  logger.debug("some");
+  config.setup();
+
+  logger.debug("hello");
 
   ctx.response.body = {
     message: "hello",
@@ -22,6 +29,7 @@ serviceRouter.all("/", middlewareRequestData(), async (ctx) => {
   };
 });
 
+serviceRouter.addRoute(serviceRoute);
 service.addRouter(serviceRouter);
 
 export { service };

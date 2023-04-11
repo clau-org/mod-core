@@ -1,6 +1,6 @@
 export {
   Service,
-  type ServiceContext,
+  type ServiceState,
   type ServiceOptions,
   ServiceRouter,
   ServiceRoute,
