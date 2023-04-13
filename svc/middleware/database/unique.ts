@@ -2,16 +2,19 @@ import { Context, Middleware } from "../../deps.ts";
 import { DefaultServiceState } from "../../mod.ts";
 
 // Define middleware to validate that user exists
-const middlewareDbExist = (
+const middlewareDbUnique = (
   modelName: string,
+  keyName: string,
   {
     message,
-    varKey,
     varDb,
+    varRequest,
+    varDbField,
   }: {
     message?: string;
-    varKey?: string;
     varDb?: string;
+    varRequest?: string;
+    varDbField?: string;
   } = {},
 ) => {
   const middleware: Middleware = async (
@@ -21,34 +24,37 @@ const middlewareDbExist = (
     const { logger } = ctx.app.state as DefaultServiceState;
     const db = ctx.app.state[ varDb ?? 'db' ]
     const model = db![modelName]
-    const { uuid, id } = ctx.state.requestData;
+    const keyRequest = varRequest ?? keyName
+    const keyDb = varDbField ?? keyName
+    const keyRequestData = ctx.state.requestData[keyRequest]
 
     const document = await model.findFirst({
       where: {
-        OR: [{ uuid }, { id }],
+        [`${keyDb}`]:keyRequestData,
       },
     });
 
-    const documentDoesntExist = !document;
-    const isExpected = id || uuid;
+    const documentIsNotUnique = document;
 
-    if (documentDoesntExist && isExpected) {
+    if (documentIsNotUnique) {
       ctx.response.status = 404;
       ctx.response.body = {
-        message: message ?? `${modelName} doesn't exist.`,
-        uuid,
-        id,
+        data: {
+          keyRequest,
+          keyDb,
+          keyRequestData,
+        },
+        message: message ?? `Document is not unique.`
       };
-      logger.debug(`[middleware: validateExist][${modelName} doesn't exist]`);
+      logger.debug('[middleware: validateExist]','[Document is not unique]');
       return;
     }
 
-    ctx.state[varKey ?? modelName] = document;
-    logger.debug(`[middleware: validateExist][${modelName} exists]`);
+    logger.debug('[middleware: validateExist]','[Document is unique]');
 
     await next();
   };
   return middleware;
 };
 
-export { middlewareDbExist };
+export { middlewareDbUnique };

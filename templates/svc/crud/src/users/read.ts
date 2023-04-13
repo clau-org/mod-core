@@ -1,23 +1,22 @@
 import {
+  DefaultServiceState,
   Middleware,
   middlewareDbExist,
-  middlewareRequestData,
   schemaIds,
   schemaPage,
-  ServiceContext,
   ServiceRoute,
   z,
 } from "../deps.ts";
 
-const validateReadRequest = middlewareRequestData(z.object({
+export const schema = z.object({
   ...schemaIds,
   ...schemaPage,
-}));
+});
 
-const validateExist = middlewareDbExist("users", { varKey: "user" });
+export const validateExist = middlewareDbExist("users", { varKey: "user" });
 
-const handler: Middleware = async (ctx) => {
-  const { logger, db } = ctx.app.state as ServiceContext;
+export const handler: Middleware = async (ctx) => {
+  const { logger, db } = ctx.app.state as DefaultServiceState;
   const { user } = ctx.state;
   const { page = 1, pageSize = 12 } = ctx.state.requestData;
 
@@ -37,10 +36,8 @@ const handler: Middleware = async (ctx) => {
   };
 };
 
-const route = new ServiceRoute("/read");
-
-route.addMiddleware(validateReadRequest);
-route.addMiddleware(validateExist);
-route.setHandler(handler);
-
-export { route };
+export const route = new ServiceRoute("/users/read", {
+  schema,
+  handler,
+  middlewares: [validateExist],
+});

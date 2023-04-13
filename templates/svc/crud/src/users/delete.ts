@@ -1,21 +1,19 @@
 import {
+  DefaultServiceState,
   Middleware,
   middlewareDbExist,
   middlewareRequestData,
   schemaIds,
-  ServiceContext,
   ServiceRoute,
   z,
 } from "../deps.ts";
 
-export const schemaDelete = z.object({ ...schemaIds });
+export const schema = z.object({ ...schemaIds });
 
-const validateDeleteRequest = middlewareRequestData(schemaDelete);
+export const validateExist = middlewareDbExist("users", { varKey: "user" });
 
-const validateExist = middlewareDbExist("users", { varKey: "user" });
-
-const handler: Middleware = async (ctx) => {
-  const { logger, db } = ctx.app.state as ServiceContext;
+export const handler: Middleware = async (ctx) => {
+  const { logger, db } = ctx.app.state as DefaultServiceState;
   let { user } = ctx.state;
 
   if (user) {
@@ -28,10 +26,8 @@ const handler: Middleware = async (ctx) => {
   ctx.response.body = { data: { user } };
 };
 
-const route = new ServiceRoute("/delete");
-
-route.addMiddleware(validateDeleteRequest);
-route.addMiddleware(validateExist);
-route.setHandler(handler);
-
-export { route };
+export const route = new ServiceRoute("/users/delete", {
+  schema,
+  handler,
+  middlewares: [validateExist],
+});

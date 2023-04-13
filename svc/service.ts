@@ -21,7 +21,7 @@ export interface ServiceRouteOptions {
 }
 
 const defaultHandler: Middleware = (ctx) => {
-  const { logger } = ctx.app.state as ServiceState;
+  const { logger } = ctx.app.state as DefaultServiceState;
   logger.info("defaultHandler");
   ctx.response.body = "defaultHandler";
 };
@@ -75,14 +75,14 @@ export interface ServiceOptions extends ConfigOptions {
   [key: string]: any;
 }
 
-export interface ServiceState {
+export interface DefaultServiceState {
   logger: Logger;
   config: Config;
   [key: string]: any;
 }
 
 // Define an API class that uses Oak and the custom router
-export class Service<T extends ServiceState> {
+export class Service<T extends DefaultServiceState> {
   app: Application<T>;
   routers: ServiceRouter[];
   router: ServiceRouter;
@@ -127,7 +127,7 @@ export class Service<T extends ServiceState> {
 
     // Set application context
     const state: T = {
-      ...({ logger: this.logger, config: this.config } as ServiceState),
+      ...({ logger: this.logger, config: this.config } as DefaultServiceState),
     } as T;
 
     this.app.state = state;

@@ -1,19 +1,13 @@
-import {
-  Middleware,
-  middlewareRequestData,
-  ServiceContext,
-  ServiceRoute,
-  z,
-} from "../deps.ts";
+import { DefaultServiceState, Middleware, ServiceRoute, z, middlewareDbUnique } from "../deps.ts";
 
-export const schemaCreate = z.object({
+export const schema = z.object({
   email: z.string().email(),
 }).strict();
 
-const validateCreateRequest = middlewareRequestData(schemaCreate);
+export const validateUnique = middlewareDbUnique("users","email");
 
-const handler: Middleware = async (ctx) => {
-  const { logger, db } = ctx.app.state as ServiceContext;
+export const handler: Middleware = async (ctx) => {
+  const { logger, db } = ctx.app.state as DefaultServiceState;
   const data = ctx.state.requestData;
 
   const user = await db.users.create({ data });
@@ -21,8 +15,4 @@ const handler: Middleware = async (ctx) => {
   ctx.response.body = { data: { user } };
 };
 
-const route = new ServiceRoute("/create");
-route.addMiddleware(validateCreateRequest);
-route.setHandler(handler);
-
-export { route };
+export const route = new ServiceRoute("/users/create", { schema, handler, middlewares: [validateUnique] });

@@ -1,5 +1,7 @@
 export {
+  type DefaultServiceState,
   middlewareDbExist,
+  middlewareDbUnique,
   middlewareError,
   middlewareRequestData,
   schemaId,
@@ -7,13 +9,10 @@ export {
   schemaPage,
   schemaUuid,
   Service,
-  type ServiceState,
   type ServiceOptions,
-  ServiceRouter,
   ServiceRoute,
-  createDBClient
+  ServiceRouter,
 } from "../../../../svc/mod.ts";
-
 
 export {
   Context,

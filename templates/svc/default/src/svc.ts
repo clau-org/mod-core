@@ -1,7 +1,7 @@
 import {
   Service,
   ServiceRoute,
-  ServiceState,
+  DefaultServiceState,
   z,
 } from "./deps.ts";
 
@@ -12,7 +12,7 @@ serviceRoute.setSchema(z.object({
   hello: z.string(),
 }));
 serviceRoute.setHandler((ctx) => {
-  const { logger, config } = ctx.app.state as ServiceState;
+  const { logger, config } = ctx.app.state as DefaultServiceState;
   const { requestData } = ctx.state;
   
   config.setup();

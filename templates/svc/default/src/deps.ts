@@ -5,7 +5,7 @@ export {
   type ServiceOptions,
   ServiceRoute,
   ServiceRouter,
-  type ServiceState,
+  type DefaultServiceState,
 } from "../../../../svc/mod.ts";
 export {
   Context,

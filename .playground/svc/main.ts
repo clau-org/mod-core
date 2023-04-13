@@ -1,6 +1,6 @@
 import {
   Service,
-  ServiceState,
+  DefaultServiceState,
   ServiceRoute,
 } from "../../svc/mod.ts";
 
@@ -8,7 +8,7 @@ const service = new Service();
 
 const serviceRoute = new ServiceRoute("/");
 serviceRoute.setHandler((ctx) => {
-  const { logger, config } = ctx.app.state as ServiceState;
+  const { logger, config } = ctx.app.state as DefaultServiceState;
   const { requestData } = ctx.state;
 
   config.setup();
