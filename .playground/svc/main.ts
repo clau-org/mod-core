@@ -2,12 +2,9 @@ import {
   Service,
   ServiceState,
   ServiceRoute,
-  ServiceRouter,
 } from "../../svc/mod.ts";
 
 const service = new Service();
-
-const serviceRouter = new ServiceRouter();
 
 const serviceRoute = new ServiceRoute("/");
 serviceRoute.setHandler((ctx) => {
@@ -25,7 +22,8 @@ serviceRoute.setHandler((ctx) => {
   };
 });
 
-serviceRouter.addRoute(serviceRoute);
-service.addRouter(serviceRouter);
+service.addRoute(serviceRoute)
 
-export { service };
+// export { service };
+
+service.listen();

@@ -71,6 +71,7 @@ export interface ServiceOptions extends ConfigOptions {
   port?: number;
   logLevel?: LogLevels;
   routers?: ServiceRouter[];
+  router?: ServiceRouter;
   [key: string]: any;
 }
 
@@ -84,6 +85,7 @@ export interface ServiceState {
 export class Service<T extends ServiceState> {
   app: Application<T>;
   routers: ServiceRouter[];
+  router: ServiceRouter;
   logger: Logger;
   options: ServiceOptions;
   config: Config;
@@ -95,6 +97,7 @@ export class Service<T extends ServiceState> {
       denoJsonPath,
       envPath,
       routers,
+      router,
     } = options ?? {};
 
     // Save the configuration options
@@ -116,6 +119,8 @@ export class Service<T extends ServiceState> {
     // Create an empty array to store the routers
     this.routers = routers ?? [];
     this.logger.debug("[service.constructor]", "service created");
+
+    this.router = router ?? new ServiceRouter();
 
     // Create a new Oak application instance
     this.app = new Application<T>();
@@ -146,18 +151,35 @@ export class Service<T extends ServiceState> {
       this.app.use(router.routes());
       this.app.use(router.allowedMethods());
     }
+    
+    this.app.use(this.router.routes());
+    this.app.use(this.router.allowedMethods());
 
     logger.debug(`[service.setupRouters]`, "routers setup");
   }
 
+  
   // Add a router to the API
   addRouter(router: ServiceRouter) {
     this.routers.push(router);
 
     router.forEach(({ path }) =>
       this.logger.debug("[service.addRouter]", "route added", { path })
+      );
+      
+      this.setupRouters();
+  }
+    
+  addRoute(route: ServiceRoute) {
+    this.logger.debug("[service.addRoute]", "route added", )
+    this.router.all(
+      route.path,
+      middlewareRequestData(route.schema),
+      // @ts-ignore
+      ...route.middlewares,
+      // @ts-ignore
+      route.handler,
     );
-
     this.setupRouters();
   }
 
@@ -166,9 +188,9 @@ export class Service<T extends ServiceState> {
     this.app.addEventListener("listen", ({ port, secure, hostname }) => {
       const { logger } = this;
 
+      const host = hostname === "0.0.0.0" ? "localhost" : hostname; 
       const protocol = secure ? "https" : "http";
-      const url = `${protocol}://${hostname}:${port}`;
-
+      const url = `${protocol}://${host}:${port}`;
       const service = {
         hostname,
         secure,
