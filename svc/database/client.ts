@@ -1,12 +1,6 @@
-/*
-const DBClient = ExtendDBClient(PrismaClient);
-
-const db = new DBClient();
-*/
-
 type Constructor<T> = new (...args: any[]) => T;
 
-function createDBClient<T extends Constructor<any>>(
+export function createDBClient<T extends Constructor<any>>(
   ClientClass: T,
 ): T & Constructor<DBClientFunctions> {
   return class extends ClientClass {

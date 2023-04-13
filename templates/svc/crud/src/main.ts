@@ -1,3 +1,3 @@
 import { service } from "./svc.ts";
 
-service.listen();
+await service.listen();

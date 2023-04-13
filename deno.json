@@ -5,9 +5,7 @@
     "dev": "deno run -A --watch .playground/main.ts",
     "test": "deno test -A",
     "test:dev": "deno test -A --watch",
-    "preview:": "deno run -A .playground/main.ts",
-    "db:generate": "deno run -A npm:prisma@latest generate --data-proxy --schema=./svc/database/schema.prisma",
-    "db:push": "deno run -A npm:prisma@latest db push --schema=./svc/database/schema.prisma"
+    "preview:": "deno run -A .playground/main.ts"
   },
   "fmt": {
     "files": {

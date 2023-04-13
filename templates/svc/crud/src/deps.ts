@@ -7,13 +7,14 @@ export {
   schemaPage,
   schemaUuid,
   Service,
-  type ServiceContext,
+  type ServiceState,
   type ServiceOptions,
   ServiceRouter,
-  ServiceRoute
-} from "https://github.com/clau-org/mod-core/raw/v0.0.8/svc/mod.ts";
+  ServiceRoute,
+  createDBClient
+} from "../../../../svc/mod.ts";
 
-// from "../../../../svc/mod.ts";
+
 export {
   Context,
   type Middleware,
