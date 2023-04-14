@@ -1,29 +1,20 @@
-import {
-  Service,
-  DefaultServiceState,
-  ServiceRoute,
-} from "../../svc/mod.ts";
+import { DefaultServiceState, Service, ServiceRoute } from "../../svc/mod.ts";
 
 const service = new Service();
 
 const serviceRoute = new ServiceRoute("/");
 
-serviceRoute.setHandler((ctx) => {
+serviceRoute.setHandler(async (ctx) => {
   const { logger, config } = ctx.app.state as DefaultServiceState;
   const { requestData } = ctx.state;
 
-  config.setup();
+  await config.setup();
 
   logger.debug("hello");
 
-  ctx.response.body = {
-    message: "hello",
-    requestData,
-    config,
-  };
+  ctx.response.body = { requestData, config };
 });
 
-service.addRoute(serviceRoute)
+service.addRoute(serviceRoute);
 
-
-service.listen();
+await service.listen();

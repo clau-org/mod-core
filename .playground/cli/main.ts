@@ -2,36 +2,20 @@ import { ActionContext, Cli, CliCommand } from "../../cli/mod.ts";
 
 const cli = new Cli();
 
-const command1 = new CliCommand("command1");
+const command = new CliCommand("command");
 
-command1.addFlag({
-  key: "-s --some",
-  description: "some description",
+command.addFlag({
+  key: "-f --flag",
+  description: "some flag",
   required: true,
 });
 
-command1.setAction((ctx: ActionContext) => {
+command.setAction((ctx: ActionContext) => {
   const { logger, program } = ctx;
 
   logger.info("action", program.some);
 });
 
-const command2 = new CliCommand("command2", {
-  action: (ctx: ActionContext) => {
-    const { logger, program } = ctx;
-
-    logger.info("action2", program.some);
-  },
-  flags: [
-    {
-      key: "-s --some",
-      description: "some description",
-      required: true,
-    },
-  ],
-});
-
-cli.addCommand(command1);
-cli.addCommand(command2);
+cli.addCommand(command);
 
 await cli.run();

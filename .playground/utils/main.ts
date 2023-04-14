@@ -6,6 +6,4 @@ const config = new Config();
 
 await config.setup();
 
-logger.log({
-  config,
-});
+logger.log({ config });

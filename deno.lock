@@ -338,6 +338,21 @@
     "https://jspm.dev/npm:superagent@6.1.0/lib/response-base!cjs": "00ac549f34d73c2753caa798aa7eb781051179013e3418ff0868a1e1904a8913",
     "https://jspm.dev/npm:superagent@6.1.0/lib/utils!cjs": "ea706523553983c96ef4ab2f191c61c53fb8b78ad8ff2472b48f1385e896c030",
     "https://jspm.dev/superagent@6.1.0": "4b3082d71252c42abd3930d85d1f3c4b2e937e0fab2b5f1c9d19eac20dea89a9",
-    "https://raw.githubusercontent.com/clau-org/mod-core/v0.0.1/log/mod.ts": "76e53ddb65ae67344eb5febb0d12e9c8c09e5cfee6b6d2af5c18a2fce8db4712"
+    "https://raw.githubusercontent.com/clau-org/mod-core/main/templates/svc/default/src/deps.ts": "cf40df8487f1271870eb557a717dbe4bd4009ac0eb212a05cef569ea0933d995",
+    "https://raw.githubusercontent.com/clau-org/mod-core/main/templates/svc/default/src/main.ts": "03549086036f5739b59860693d9c80a70adab9e3018d3f36d8a1c8a61960a1fe",
+    "https://raw.githubusercontent.com/clau-org/mod-core/main/templates/svc/default/src/svc.ts": "0a1f7a48858d4779fb8c600147a91f18db0201ec1714a55ff7628e2c1b2ee050",
+    "https://raw.githubusercontent.com/clau-org/mod-core/v0.0.1/log/mod.ts": "76e53ddb65ae67344eb5febb0d12e9c8c09e5cfee6b6d2af5c18a2fce8db4712",
+    "https://raw.githubusercontent.com/clau-org/mod-core/v0.0.9/svc/deps.ts": "c22dd773c0f577f0e9274934c46836e73cc7fc553307ca8c2993d1524c762332",
+    "https://raw.githubusercontent.com/clau-org/mod-core/v0.0.9/svc/middleware/database/exist.ts": "3a8fc9304e0b16518eb83d7b4fda59b6045cb7d5b89fe4434442ee8a77d09695",
+    "https://raw.githubusercontent.com/clau-org/mod-core/v0.0.9/svc/middleware/database/unique.ts": "3af45ac6fa0a5f008df045e9ac85536826bdba28e6d10b7b95f1448342157ab0",
+    "https://raw.githubusercontent.com/clau-org/mod-core/v0.0.9/svc/middleware/error.ts": "c90127aea8fa4a1cffd08ab8d6c4c82c1d2dd4f70b367addfb7a42a39035d7f8",
+    "https://raw.githubusercontent.com/clau-org/mod-core/v0.0.9/svc/middleware/request_data.ts": "ef9ea1e3379d265276973cd228004ec0f2948b760402f0d9a3bc3f07e8bc9167",
+    "https://raw.githubusercontent.com/clau-org/mod-core/v0.0.9/svc/mod.ts": "71eb609bb81fec75f3c9d84bcffbe6e46b13ed170a0a202b9023ef5ad3b976a8",
+    "https://raw.githubusercontent.com/clau-org/mod-core/v0.0.9/svc/schemas/database.ts": "8e74ee0131e476138b4499df6a4ffc5c1a58ad72592a031a6e93bd1927c25ade",
+    "https://raw.githubusercontent.com/clau-org/mod-core/v0.0.9/svc/service.ts": "4f717c0f0e95f67eeacbf046a0af48f2d8ec2427917ddbd4f4219a8b49498b5a",
+    "https://raw.githubusercontent.com/clau-org/mod-core/v0.0.9/utils/config/deps.ts": "426dec75eee110484f7129944055dba31dd31793afde94f92a83113523148804",
+    "https://raw.githubusercontent.com/clau-org/mod-core/v0.0.9/utils/config/mod.ts": "d4994dd1081ac029c732dede27e3c884c3d258f79c11d1d77fb64ab80c0e76fe",
+    "https://raw.githubusercontent.com/clau-org/mod-core/v0.0.9/utils/log/mod.ts": "76e53ddb65ae67344eb5febb0d12e9c8c09e5cfee6b6d2af5c18a2fce8db4712",
+    "https://raw.githubusercontent.com/clau-org/mod-core/v0.0.9/utils/mod.ts": "66339960bfdf1fd889b2137abf3563319d290e2d5170856a2d7987f672737fba"
   }
 }

@@ -69,6 +69,7 @@ export class ServiceRouter extends Router {
 export interface ServiceOptions extends ConfigOptions {
   name?: string;
   port?: number;
+  version?: string;
   logLevel?: LogLevels;
   routers?: ServiceRouter[];
   router?: ServiceRouter;
@@ -89,10 +90,13 @@ export class Service<T extends DefaultServiceState> {
   logger: Logger;
   options: ServiceOptions;
   config: Config;
+  name: string;
+  version: string;
 
   constructor(options?: ServiceOptions) {
     const {
       name = "service",
+      version = "0.0.0",
       logLevel = LogLevels.DEBUG,
       denoJsonPath,
       envPath,
@@ -103,6 +107,9 @@ export class Service<T extends DefaultServiceState> {
     // Save the configuration options
     this.options = options ?? {};
 
+    this.name = name;
+    this.version = version;
+
     this.config = new Config({
       denoJsonPath,
       envPath,
@@ -110,7 +117,7 @@ export class Service<T extends DefaultServiceState> {
 
     // Create a logger instance with the API name as prefix
     this.logger = new Logger({
-      prefix: name,
+      prefix: this.name,
       level: logLevel,
       datetime: true,
       stringify: false,
@@ -127,7 +134,10 @@ export class Service<T extends DefaultServiceState> {
 
     // Set application context
     const state: T = {
-      ...({ logger: this.logger, config: this.config } as DefaultServiceState),
+      ...({
+        logger: this.logger,
+        config: this.config,
+      } as DefaultServiceState),
     } as T;
 
     this.app.state = state;
@@ -139,8 +149,6 @@ export class Service<T extends DefaultServiceState> {
     this.app.use(middlewareError);
 
     this.setupRouters();
-
-    this.addEventListener();
   }
 
   setupRouters() {
@@ -151,27 +159,26 @@ export class Service<T extends DefaultServiceState> {
       this.app.use(router.routes());
       this.app.use(router.allowedMethods());
     }
-    
+
     this.app.use(this.router.routes());
     this.app.use(this.router.allowedMethods());
 
     logger.debug(`[service.setupRouters]`, "routers setup");
   }
 
-  
   // Add a router to the API
   addRouter(router: ServiceRouter) {
     this.routers.push(router);
 
     router.forEach(({ path }) =>
       this.logger.debug("[service.addRouter]", "route added", { path })
-      );
-      
-      this.setupRouters();
+    );
+
+    this.setupRouters();
   }
-    
+
   addRoute(route: ServiceRoute) {
-    this.logger.debug("[service.addRoute]", "route added", )
+    this.logger.debug("[service.addRoute]", "route added");
     this.router.all(
       route.path,
       middlewareRequestData(route.schema),
@@ -185,14 +192,17 @@ export class Service<T extends DefaultServiceState> {
 
   addEventListener() {
     // Listen for the "listen" event and log when the App starts
-    this.app.addEventListener("listen", ({ port, secure, hostname }) => {
-      const { logger } = this;
+    this.app.addEventListener("listen", ({ port, secure, hostname, timeStamp}) => {
+      const { logger, name, version } = this;
 
-      const host = hostname === "0.0.0.0" ? "localhost" : hostname; 
+      const host = hostname === "0.0.0.0" ? "localhost" : hostname;
       const protocol = secure ? "https" : "http";
       const url = `${protocol}://${host}:${port}`;
       const service = {
+        name,
+        version,
         hostname,
+        timeStamp,
         secure,
         port,
         protocol,
@@ -206,9 +216,21 @@ export class Service<T extends DefaultServiceState> {
     });
   }
 
-  async listen({ port }: { port?: number } = {}) {
+  async setup() {
+    await this.config.setup();
     await this.app.state.config.setup();
 
+    const { name, version } = this.config.config;
+
+    this.name = name;
+    this.version = version;
+    this.logger.prefix = name;
+
+    this.addEventListener();
+  }
+
+  async listen({ port }: { port?: number } = {}) {
+    await this.setup();
     const listenPort = port ?? this.options?.port ?? 8000;
     return this.app?.listen({ port: listenPort });
   }

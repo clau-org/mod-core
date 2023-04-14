@@ -1,4 +1,4 @@
-import { Config, type ConfigOptions, Denomander, Logger } from "./deps.ts";
+import { Config, ConfigOptions, Denomander, Logger } from "./deps.ts";
 
 export interface CliCommandFlag {
   key: string;
@@ -66,20 +66,9 @@ export class Cli {
       name = "cli",
       version = "0.0.0",
       description = "cli",
-
-      allowEmptyValues,
-      defaultsPath,
       denoJsonPath,
       envPath,
-      examplePath,
-      restrictEnvAccessTo,
     } = options ?? {};
-
-    this.program = new Denomander({
-      app_name: name,
-      app_version: version,
-      app_description: description,
-    });
 
     this.logger = new Logger({
       prefix: name,
@@ -88,18 +77,27 @@ export class Cli {
     });
 
     this.config = new Config({
-      allowEmptyValues,
-      defaultsPath,
       denoJsonPath,
       envPath,
-      examplePath,
-      restrictEnvAccessTo,
+    });
+
+    this.program = new Denomander({
+      app_name: name,
+      app_version: version,
+      app_description: description,
     });
   }
 
+  async setup() {
+    await this.config.setup();
+
+    const { name, version } = this.config.config;
+
+    this.program.app_name = name, this.program.app_version = version;
+  }
+
   addCommand(command: CliCommand) {
-    const { logger } = this;
-    let newProgram = this.program;
+    const newProgram = this.program;
 
     command.logger = this.logger;
     command.program = this.program;
@@ -129,9 +127,10 @@ export class Cli {
 
   async run() {
     const { logger } = this;
-    await this.config.setup();
+
+    await this.setup()
+
     try {
-      logger.debug({ config: this.config });
       this.program.parse(Deno.args);
     } catch (error) {
       logger.error({ error });
