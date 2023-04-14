@@ -1,10 +1,12 @@
 export {
+  type DefaultServiceState,
   Service,
   type ServiceOptions,
-  ServiceRoute,
-  ServiceRouter,
-  type DefaultServiceState,
-} from "./service.ts";
+} from "./service/service.ts";
+
+export { ServiceRouter } from "./service/router.ts";
+
+export { ServiceRoute } from "./service/route.ts";
 
 export { middlewareError } from "./middleware/error.ts";
 export { middlewareRequestData } from "./middleware/request_data.ts";

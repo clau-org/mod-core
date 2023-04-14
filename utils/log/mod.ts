@@ -37,7 +37,7 @@ export class Logger implements LoggerInterface {
       prefix = "",
       level = LogLevels.DEBUG,
       stringify = false,
-      datetime = false,
+      datetime = true,
     } = options ?? {};
 
     this.prefix = prefix;
@@ -139,3 +139,5 @@ export class Logger implements LoggerInterface {
     this._log(LogLevels.CRITICAL, ...args);
   }
 }
+
+export const logger = new Logger();

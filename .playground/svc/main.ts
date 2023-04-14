@@ -15,6 +15,19 @@ serviceRoute.setHandler(async (ctx) => {
   ctx.response.body = { requestData, config };
 });
 
+// serviceRoute.setHandler(async (ctx) => {
+//   const { logger, config, request } = ctx;
+
+//   await config.setup();
+
+//   logger.debug("hello");
+
+//   return {
+//     request,
+//     config,
+//   };
+// });
+
 service.addRoute(serviceRoute);
 
 await service.listen();

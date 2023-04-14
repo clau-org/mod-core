@@ -1,4 +1,3 @@
-// Import required modules
 import {
   Application,
   Config,
@@ -9,71 +8,21 @@ import {
   oakCors,
   Router,
   Schema,
-} from "./deps.ts";
-import { middlewareError } from "./middleware/error.ts";
-import { middlewareRequestData } from "./middleware/request_data.ts";
-
-// Define types for API context and configuration
-export interface ServiceRouteOptions {
-  middlewares?: Middleware[];
-  handler?: Function;
-  schema?: Schema;
-}
-
-const defaultHandler: Middleware = (ctx) => {
-  const { logger } = ctx.app.state as DefaultServiceState;
-  logger.info("defaultHandler");
-  ctx.response.body = "defaultHandler";
-};
-export class ServiceRoute {
-  path: string;
-  middlewares: Middleware[];
-  handler: Function;
-  schema?: Schema;
-
-  constructor(path: string, options?: ServiceRouteOptions) {
-    const { middlewares, handler, schema } = options ?? {};
-    this.path = path;
-    this.middlewares = middlewares ?? [];
-    this.handler = handler ?? defaultHandler;
-    this.schema = schema;
-  }
-
-  addMiddleware(middleware: Middleware) {
-    this.middlewares.push(middleware);
-  }
-
-  setHandler(middleware: Middleware) {
-    this.handler = middleware;
-  }
-
-  setSchema(schema: Schema) {
-    this.schema = schema;
-  }
-}
-
-// Define a custom router that extends Oak's Router
-export class ServiceRouter extends Router {
-  addRoute(route: ServiceRoute) {
-    this.all(
-      route.path,
-      middlewareRequestData(route.schema),
-      // @ts-ignore
-      ...route.middlewares,
-      // @ts-ignore
-      route.handler,
-    );
-  }
-}
+} from "../deps.ts";
+import { middlewareError } from "../middleware/error.ts";
+import { middlewareRequestData } from "../middleware/request_data.ts";
+import { ServiceRouter } from "./router.ts";
+import { ServiceRoute } from "./route.ts";
 
 export interface ServiceOptions extends ConfigOptions {
   name?: string;
-  port?: number;
   version?: string;
-  logLevel?: LogLevels;
+  config?: Config
+  logger?: Logger;
   routers?: ServiceRouter[];
   router?: ServiceRouter;
-  [key: string]: any;
+  port?: number;
+  logLevel?: LogLevels;
 }
 
 export interface DefaultServiceState {
@@ -84,14 +33,14 @@ export interface DefaultServiceState {
 
 // Define an API class that uses Oak and the custom router
 export class Service<T extends DefaultServiceState> {
+  name: string;
+  version: string;
+  config: Config;
+  logger: Logger;
   app: Application<T>;
   routers: ServiceRouter[];
   router: ServiceRouter;
-  logger: Logger;
   options: ServiceOptions;
-  config: Config;
-  name: string;
-  version: string;
 
   constructor(options?: ServiceOptions) {
     const {
@@ -104,32 +53,15 @@ export class Service<T extends DefaultServiceState> {
       router,
     } = options ?? {};
 
-    // Save the configuration options
     this.options = options ?? {};
 
     this.name = name;
     this.version = version;
 
-    this.config = new Config({
-      denoJsonPath,
-      envPath,
-    });
-
-    // Create a logger instance with the API name as prefix
-    this.logger = new Logger({
-      prefix: this.name,
-      level: logLevel,
-      datetime: true,
-      stringify: false,
-    });
-
-    // Create an empty array to store the routers
-    this.routers = routers ?? [];
-    this.logger.debug("[service.constructor]", "service created");
-
+    this.config = new Config({ denoJsonPath, envPath });
+    this.logger = new Logger({ prefix: this.name, level: logLevel });
     this.router = router ?? new ServiceRouter();
-
-    // Create a new Oak application instance
+    this.routers = routers ?? [];
     this.app = new Application<T>();
 
     // Set application context
@@ -192,28 +124,31 @@ export class Service<T extends DefaultServiceState> {
 
   addEventListener() {
     // Listen for the "listen" event and log when the App starts
-    this.app.addEventListener("listen", ({ port, secure, hostname, timeStamp}) => {
-      const { logger, name, version } = this;
+    this.app.addEventListener(
+      "listen",
+      ({ port, secure, hostname, timeStamp }) => {
+        const { logger, name, version } = this;
 
-      const host = hostname === "0.0.0.0" ? "localhost" : hostname;
-      const protocol = secure ? "https" : "http";
-      const url = `${protocol}://${host}:${port}`;
-      const service = {
-        name,
-        version,
-        hostname,
-        timeStamp,
-        secure,
-        port,
-        protocol,
-        url,
-      };
+        const host = hostname === "0.0.0.0" ? "localhost" : hostname;
+        const protocol = secure ? "https" : "http";
+        const url = `${protocol}://${host}:${port}`;
+        const service = {
+          name,
+          version,
+          hostname,
+          timeStamp,
+          secure,
+          port,
+          protocol,
+          url,
+        };
 
-      logger.debug("[service.listen]", "service options", {
-        options: this.options ?? [],
-      });
-      logger.info("[service.listen]", "service listening data", { service });
-    });
+        logger.debug("[service.listen]", "service options", {
+          options: this.options ?? [],
+        });
+        logger.info("[service.listen]", "service listening data", { service });
+      },
+    );
   }
 
   async setup() {

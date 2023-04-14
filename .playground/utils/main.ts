@@ -1,9 +1,5 @@
-import { Config, Logger } from "../../utils/mod.ts";
+import { logger, setupConfig } from "../../utils/mod.ts";
 
-const logger = new Logger();
-
-const config = new Config();
-
-await config.setup();
+const config = await setupConfig();
 
 logger.log({ config });
