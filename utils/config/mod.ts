@@ -1,15 +1,17 @@
 import { load } from "./deps.ts";
 
 export const DEFAULT_DENO_JSON_PATH = "./deno.json";
+export const DEFAULT_ENV_PATH = "./.env";
 
 export interface ConfigOptions {
   denoJsonPath?: string;
-  envPath?: string
+  envPath?: string;
 }
 
 export class Config {
-  env: any;
+  dotEnv: any;
   denoJson: any;
+  config: any;
   options?: ConfigOptions;
 
   constructor(options?: ConfigOptions) {
@@ -17,7 +19,8 @@ export class Config {
   }
 
   async setup() {
-    const { denoJsonPath, ...envOptions } = this.options ?? {};
+    const { denoJsonPath, envPath } = this.options ?? {};
+
     try {
       const jsonTxt = await Deno?.readTextFile?.(
         denoJsonPath ?? DEFAULT_DENO_JSON_PATH,
@@ -26,7 +29,16 @@ export class Config {
     } catch (_e) {}
 
     try {
-      this.env = await load(envOptions);
+      this.dotEnv = await load({ envPath: envPath ?? DEFAULT_ENV_PATH });
     } catch (_e) {}
+
+    if (this.denoJson) {
+      delete this.denoJson.tasks;
+    }
+
+    const config = { ...this.denoJson, ...this.dotEnv };
+
+    this.config = config;
+    return config;
   }
 }

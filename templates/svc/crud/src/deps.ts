@@ -13,7 +13,7 @@ export {
   ServiceRoute,
   ServiceRouter,
 } from "../../../../svc/mod.ts";
-
+export { Config, } from "../../../../utils/mod.ts";
 export {
   Context,
   type Middleware,
