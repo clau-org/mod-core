@@ -307,6 +307,18 @@
     "https://raw.githubusercontent.com/clau-org/mod-core/v0.0.6/utils/config/deps.ts": "9efd7989fa17d0d3662e72d00df6748ccf87ca3ceec6e6b6bf4aebb54ec9d0ec",
     "https://raw.githubusercontent.com/clau-org/mod-core/v0.0.6/utils/config/mod.ts": "559f5a9c70ae567e2a6f4af55a9e709574d20a3d02477a2eca14d183fdac7697",
     "https://raw.githubusercontent.com/clau-org/mod-core/v0.0.6/utils/log/mod.ts": "76e53ddb65ae67344eb5febb0d12e9c8c09e5cfee6b6d2af5c18a2fce8db4712",
-    "https://raw.githubusercontent.com/clau-org/mod-core/v0.0.6/utils/mod.ts": "66339960bfdf1fd889b2137abf3563319d290e2d5170856a2d7987f672737fba"
+    "https://raw.githubusercontent.com/clau-org/mod-core/v0.0.6/utils/mod.ts": "66339960bfdf1fd889b2137abf3563319d290e2d5170856a2d7987f672737fba",
+    "https://raw.githubusercontent.com/clau-org/mod-core/v0.0.9/svc/deps.ts": "c22dd773c0f577f0e9274934c46836e73cc7fc553307ca8c2993d1524c762332",
+    "https://raw.githubusercontent.com/clau-org/mod-core/v0.0.9/svc/middleware/database/exist.ts": "3a8fc9304e0b16518eb83d7b4fda59b6045cb7d5b89fe4434442ee8a77d09695",
+    "https://raw.githubusercontent.com/clau-org/mod-core/v0.0.9/svc/middleware/database/unique.ts": "3af45ac6fa0a5f008df045e9ac85536826bdba28e6d10b7b95f1448342157ab0",
+    "https://raw.githubusercontent.com/clau-org/mod-core/v0.0.9/svc/middleware/error.ts": "c90127aea8fa4a1cffd08ab8d6c4c82c1d2dd4f70b367addfb7a42a39035d7f8",
+    "https://raw.githubusercontent.com/clau-org/mod-core/v0.0.9/svc/middleware/request_data.ts": "ef9ea1e3379d265276973cd228004ec0f2948b760402f0d9a3bc3f07e8bc9167",
+    "https://raw.githubusercontent.com/clau-org/mod-core/v0.0.9/svc/mod.ts": "71eb609bb81fec75f3c9d84bcffbe6e46b13ed170a0a202b9023ef5ad3b976a8",
+    "https://raw.githubusercontent.com/clau-org/mod-core/v0.0.9/svc/schemas/database.ts": "8e74ee0131e476138b4499df6a4ffc5c1a58ad72592a031a6e93bd1927c25ade",
+    "https://raw.githubusercontent.com/clau-org/mod-core/v0.0.9/svc/service.ts": "4f717c0f0e95f67eeacbf046a0af48f2d8ec2427917ddbd4f4219a8b49498b5a",
+    "https://raw.githubusercontent.com/clau-org/mod-core/v0.0.9/utils/config/deps.ts": "426dec75eee110484f7129944055dba31dd31793afde94f92a83113523148804",
+    "https://raw.githubusercontent.com/clau-org/mod-core/v0.0.9/utils/config/mod.ts": "d4994dd1081ac029c732dede27e3c884c3d258f79c11d1d77fb64ab80c0e76fe",
+    "https://raw.githubusercontent.com/clau-org/mod-core/v0.0.9/utils/log/mod.ts": "76e53ddb65ae67344eb5febb0d12e9c8c09e5cfee6b6d2af5c18a2fce8db4712",
+    "https://raw.githubusercontent.com/clau-org/mod-core/v0.0.9/utils/mod.ts": "66339960bfdf1fd889b2137abf3563319d290e2d5170856a2d7987f672737fba"
   }
 }

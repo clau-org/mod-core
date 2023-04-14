@@ -5,9 +5,10 @@ export {
   type ServiceOptions,
   ServiceRoute,
   ServiceRouter,
-  type DefaultServiceState,
-} from "../../../../svc/mod.ts";
-export {
+  type DefaultServiceState
+} from "https://raw.githubusercontent.com/clau-org/mod-core/v0.0.9/svc/mod.ts"
+
+export{
   Context,
   type Middleware,
 } from "https://deno.land/x/oak@v12.1.0/mod.ts";

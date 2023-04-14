@@ -7,6 +7,7 @@ import {
 const service = new Service();
 
 const serviceRoute = new ServiceRoute("/");
+
 serviceRoute.setHandler((ctx) => {
   const { logger, config } = ctx.app.state as DefaultServiceState;
   const { requestData } = ctx.state;
@@ -24,6 +25,5 @@ serviceRoute.setHandler((ctx) => {
 
 service.addRoute(serviceRoute)
 
-// export { service };
 
 service.listen();
