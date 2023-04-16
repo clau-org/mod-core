@@ -7,12 +7,12 @@ Deno.test("Hello endpoint should work", async () => {
   // const request = await superoak(api.app);
 
   // await request
-    // .post("/")
-    // .expect(200)
-    // .expect(({ body }: any) => {
-    //   if (!body.message) {
-    //     throw new Error("Missing Message");
-    //   }
-    //   assertEquals(body.message, "Hello from <NAME>");
-    // });
+  //   .post("/")
+  //   .expect(200)
+  //   .expect(({ body }: any) => {
+  //     if (!body.message) {
+  //       throw new Error("Missing Message");
+  //     }
+  //     assertEquals(body.message, "Hello from <NAME>");
+  //   });
 });

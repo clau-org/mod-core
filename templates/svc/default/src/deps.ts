@@ -1,14 +1,20 @@
 export {
+  type DefaultServiceState,
+  middlewareDbExist,
+  middlewareDbUnique,
   middlewareError,
   middlewareRequestData,
+  schemaId,
+  schemaIds,
+  schemaPage,
+  schemaUuid,
   Service,
   type ServiceOptions,
   ServiceRoute,
   ServiceRouter,
-  type DefaultServiceState
-} from "https://raw.githubusercontent.com/clau-org/mod-core/v0.0.9/svc/mod.ts"
-
-export{
+} from "../../../../svc/mod.ts";
+export { Config, } from "../../../../utils/mod.ts";
+export {
   Context,
   type Middleware,
 } from "https://deno.land/x/oak@v12.1.0/mod.ts";
