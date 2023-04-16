@@ -17,7 +17,7 @@ import { ServiceRoute } from "./route.ts";
 export interface ServiceOptions extends ConfigOptions {
   name?: string;
   version?: string;
-  config?: Config
+  config?: Config;
   logger?: Logger;
   routers?: ServiceRouter[];
   router?: ServiceRouter;

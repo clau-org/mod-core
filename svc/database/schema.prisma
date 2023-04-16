@@ -1,0 +1,17 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+generator client {
+    provider        = "prisma-client-js"
+    previewFeatures = ["deno"]
+    output          = "./generated/client"
+}
+
+datasource db {
+    provider  = "mongodb"
+    url       = env("DATAPROXY_URL")
+    directUrl = env("DATABASE_URL")
+}
+
+model clau {
+    id String @id @default(auto()) @map("_id") @db.ObjectId
+}
