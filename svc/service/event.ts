@@ -41,7 +41,7 @@ export function defineEventHandler(
   const handler: Middleware = async (ctx) => {
     const { logger, config, db } = ctx.app.state;
     const event = ctx.state.event;
-    const actionResult = await _handler({ event, logger, config, db });
+    const actionResult = await _handler({ event, logger, config, db, ctx });
     ctx.response.body = {
       ...actionResult,
     };
