@@ -1,14 +1,14 @@
 export interface Flag {
   key: string;
   description: string;
-//   options?: string[];
+  //   options?: string[];
   required?: boolean;
 }
 export interface defineFlagOptions {
   key: string;
   description?: string;
   required?: boolean;
-//   options?: string[];
+  //   options?: string[];
 }
 export const defineFlag = (options: defineFlagOptions): Flag => {
   const { key, description, required } = options;
