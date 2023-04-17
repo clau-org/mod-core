@@ -8,7 +8,5 @@ import hello from "./routes/hello/index.ts";
 export interface ServiceContext extends DefaultServiceContext {
   db: DBClient;
 }
-export default await defineService({
-  dbClient,
-  eventHandlers: [hello],
-});
+
+export default await defineService({ dbClient, eventHandlers: [hello] });
