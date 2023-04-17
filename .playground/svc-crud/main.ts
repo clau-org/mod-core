@@ -1,3 +1,3 @@
 import service from "./service.ts";
 
-await service.listen();
+service.listen(8001);

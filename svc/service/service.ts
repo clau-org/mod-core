@@ -4,6 +4,7 @@ import { EventHandler } from "./event.ts";
 import { middlewareError } from "../middleware/error.ts";
 export interface defineServiceOptions extends ServiceConfigOptions {
   eventHandlers?: EventHandler[];
+  eventHandler?: EventHandler;
   dbClient?: any;
 }
 
@@ -15,6 +16,26 @@ export interface ServiceContext {
   [key: string]: any;
 }
 
+function addEventHandler({
+  eventHandler,
+  oakApp,
+  logger,
+}: {
+  eventHandler: EventHandler;
+  oakApp: Application;
+  logger: Logger;
+}) {
+  const router = new Router();
+  router.all(
+    eventHandler.path,
+    eventHandler.validateSchema,
+    ...eventHandler.middlewares,
+    eventHandler.handler,
+  );
+  oakApp.use(router.routes());
+  oakApp.use(router.allowedMethods());
+  logger.debug("[defineService]", "eventHandler added", { path: eventHandler.path });
+}
 export async function defineService(options: defineServiceOptions) {
   let {
     name,
@@ -23,6 +44,7 @@ export async function defineService(options: defineServiceOptions) {
     port,
     logLevel,
     eventHandlers = [],
+    eventHandler,
     dbClient,
   } = options;
 
@@ -50,20 +72,11 @@ export async function defineService(options: defineServiceOptions) {
   oakApp.use(middlewareError);
 
   // Setup event handlers
-  for (const eventHandler of eventHandlers) {
-    const router = new Router();
-    router.all(
-      eventHandler.path,
-      eventHandler.validateSchema,
-      ...eventHandler.middlewares,
-      eventHandler.handler,
-    );
-    oakApp.use(router.routes());
-    oakApp.use(router.allowedMethods());
-    logger.debug("[defineService]", "eventHandler added", {
-      path: eventHandler.path,
-    });
-  }
+  eventHandlers.forEach((e) =>
+    addEventHandler({ eventHandler: e, logger, oakApp })
+  );
+
+  if (eventHandler) addEventHandler({ eventHandler, logger, oakApp });
 
   // Add event listener
   oakApp.addEventListener("listen", ({ port, secure, hostname, timeStamp }) => {
