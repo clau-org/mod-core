@@ -1,4 +1,4 @@
-import { Action, CliContext } from "./cli.ts";
+import { Action } from "./cli.ts";
 
 export interface Subcommand {
   key: string;

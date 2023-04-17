@@ -16,7 +16,7 @@ export interface Action {
 }
 export interface defineCommandLineInterfaceOptions
   extends CommandLineInterfaceConfigOptions {
-  commands: any[];
+  commands: Command[];
 }
 
 export async function defineCommandLineInterface(
@@ -52,11 +52,22 @@ export async function defineCommandLineInterface(
     app_description: config.description,
   });
 
+  const ctx: CliContext = {
+    config,
+    logger,
+    program,
+  };
+
   // Create run function
   const run = async (args?: any) => {
-    commands.forEach((command) =>
-      addCommand({ command, config, logger, program })
-    );
+    commands.forEach((command) => {
+      // Set commands
+      addCommand({ command, ...ctx });
+
+      // Set subcommands
+      addSubcommands({ command, ...ctx });
+    });
+
     try {
       program.parse(args ?? Deno.args);
     } catch (error) {
@@ -97,27 +108,51 @@ export function addCommand(
     }
   });
 
+  const ctx: CliContext = {
+    config,
+    logger,
+    program,
+  };
+
   // Set command action
-  program.action(() => {
-    command.action({
-      logger: logger,
-      program: program,
-      config: config,
-    });
-  });
+  program.action(() => command.action(ctx));
+}
 
-  // Set subcommands
+export function addSubcommands(
+  {
+    program,
+    command,
+    logger,
+    config,
+  }: {
+    program: Denomander;
+    command: Command;
+    config: CommandLineInterfaceConfig;
+    logger: Logger;
+  },
+) {
+  const ctx: CliContext = {
+    config,
+    logger,
+    program,
+  };
+
   command.subcommands?.forEach((subcommand) => {
-    const parent = program.command(subcommand.key);
+    const parent = program.command(command.key);
+    console.log(command.key);
+    console.log(subcommand.key);
+    parent.subCommand(subcommand.key);
+    parent.description(subcommand.description);
 
-    parent.subCommand(subcommand.key)
-      .description(subcommand.description)
-      .action(() => {
-        subcommand.action({
-          logger: logger,
-          program: program,
-          config: config,
-        });
-      });
+    // Set command flags
+    command.flags?.forEach((flag) => {
+      const isRequired = flag.required ?? false;
+      if (isRequired) {
+        parent.requiredOption(flag.key, flag.description ?? flag.key);
+      } else {
+        parent.option(flag.key, flag.description ?? flag.key);
+      }
+    });
+    parent.action(() => subcommand.action(ctx));
   });
 }
