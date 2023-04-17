@@ -1,172 +1,102 @@
-import {
-  Application,
-  Config,
-  ConfigOptions,
-  Logger,
-  LogLevels,
-  Middleware,
-  oakCors,
-  Router,
-  Schema,
-} from "../deps.ts";
-import { middlewareError } from "../middleware/error.ts";
-import { middlewareRequestData } from "../middleware/request_data.ts";
-import { ServiceRouter } from "./router.ts";
-import { ServiceRoute } from "./route.ts";
-
-export interface ServiceOptions extends ConfigOptions {
-  name?: string;
-  version?: string;
-  config?: Config;
-  logger?: Logger;
-  routers?: ServiceRouter[];
-  router?: ServiceRouter;
-  port?: number;
-  logLevel?: LogLevels;
+import { Application, Logger, oakCors, Router } from "../deps.ts";
+import { ServiceConfig, ServiceConfigOptions } from "./config.ts";
+import { EventHandler } from "./event.ts";
+export interface defineServiceOptions extends ServiceConfigOptions {
+  eventHandlers?: EventHandler[];
+  dbClient?: any;
 }
 
-export interface DefaultServiceState {
+export interface ServiceContext {
+  event: any;
   logger: Logger;
-  config: Config;
+  config: ServiceConfig;
   [key: string]: any;
 }
 
-// Define an API class that uses Oak and the custom router
-export class Service<T extends DefaultServiceState> {
-  name: string;
-  version: string;
-  config: Config;
-  logger: Logger;
-  app: Application<T>;
-  routers: ServiceRouter[];
-  router: ServiceRouter;
-  options: ServiceOptions;
+export async function defineService(options: defineServiceOptions) {
+  let {
+    name,
+    version,
+    environment,
+    port,
+    logLevel,
+    eventHandlers = [],
+    dbClient,
+  } = options;
 
-  constructor(options?: ServiceOptions) {
-    const {
-      name = "service",
-      version = "0.0.0",
-      logLevel = LogLevels.DEBUG,
-      denoJsonPath,
-      envPath,
-      routers,
-      router,
-    } = options ?? {};
+  // config
+  const config = new ServiceConfig({
+    name,
+    version,
+    environment,
+    port,
+    logLevel,
+  });
+  await config.load();
 
-    this.options = options ?? {};
+  // logger
+  const logger = new Logger({ prefix: config.name, level: config.logLevel });
 
-    this.name = name;
-    this.version = version;
+  logger.debug("[defineService]", "configuration loaded");
 
-    this.config = new Config({ denoJsonPath, envPath });
-    this.logger = new Logger({ prefix: this.name, level: logLevel });
-    this.router = router ?? new ServiceRouter();
-    this.routers = routers ?? [];
-    this.app = new Application<T>();
+  // Create Oak app
+  const oakApp = new Application();
+  oakApp.state = {
+    logger,
+    config,
+    db: dbClient,
+  };
 
-    // Set application context
-    const state: T = {
-      ...({
-        logger: this.logger,
-        config: this.config,
-      } as DefaultServiceState),
-    } as T;
-
-    this.app.state = state;
-
-    // Add CORS middleware to the app
-    this.app.use(oakCors());
-
-    // Add generic error handler middleware
-    this.app.use(middlewareError);
-
-    this.setupRouters();
-  }
-
-  setupRouters() {
-    const { logger } = this;
-
-    // Add each router's routes and allowed methods to the app
-    for (const router of this.routers) {
-      this.app.use(router.routes());
-      this.app.use(router.allowedMethods());
-    }
-
-    this.app.use(this.router.routes());
-    this.app.use(this.router.allowedMethods());
-
-    logger.debug(`[service.setupRouters]`, "routers setup");
-  }
-
-  // Add a router to the API
-  addRouter(router: ServiceRouter) {
-    this.routers.push(router);
-
-    router.forEach(({ path }) =>
-      this.logger.debug("[service.addRouter]", "route added", { path })
-    );
-
-    this.setupRouters();
-  }
-
-  addRoute(route: ServiceRoute) {
-    this.logger.debug("[service.addRoute]", "route added");
-    this.router.all(
-      route.path,
-      middlewareRequestData(route.schema),
+  oakApp.use(oakCors());
+  for (const eventHandler of eventHandlers) {
+    const router = new Router();
+    router.all(
+      eventHandler.path,
+      eventHandler.validateSchema,
       // @ts-ignore
-      ...route.middlewares,
+      ...eventHandler.middlewares,
       // @ts-ignore
-      route.handler,
+      eventHandler.handler,
     );
-    this.setupRouters();
+    oakApp.use(router.routes());
+    oakApp.use(router.allowedMethods());
+    logger.debug("[defineService]", "eventHandler added", {
+      path: eventHandler.path,
+    });
   }
+  const eventListener = ({ port, secure, hostname, timeStamp }: any) => {
+    const { name, version } = config;
 
-  addEventListener() {
-    // Listen for the "listen" event and log when the App starts
-    this.app.addEventListener(
-      "listen",
-      ({ port, secure, hostname, timeStamp }) => {
-        const { logger, name, version } = this;
+    const host = hostname === "0.0.0.0" ? "localhost" : hostname;
+    const protocol = secure ? "https" : "http";
+    const url = `${protocol}://${host}:${port}`;
+    const service = {
+      name,
+      version,
+      hostname,
+      timeStamp,
+      secure,
+      port,
+      protocol,
+      url,
+    };
 
-        const host = hostname === "0.0.0.0" ? "localhost" : hostname;
-        const protocol = secure ? "https" : "http";
-        const url = `${protocol}://${host}:${port}`;
-        const service = {
-          name,
-          version,
-          hostname,
-          timeStamp,
-          secure,
-          port,
-          protocol,
-          url,
-        };
+    // logger.debug("[service.listen]", "service config", { config });
+    // logger.debug("[service.listen]", "service options", { options });
+    logger.info("[service.listen]", "service listening data", { service });
+  };
+  oakApp.addEventListener("listen", eventListener);
 
-        logger.debug("[service.listen]", "service options", {
-          options: this.options ?? [],
-        });
-        logger.info("[service.listen]", "service listening data", { service });
-      },
-    );
-  }
+  const listen = async (listenPort?: number) => {
+    const port = listenPort ?? config.port;
+    return oakApp.listen({ port });
+  };
 
-  async setup() {
-    await this.config.setup();
-    await this.app.state.config.setup();
+  return {
+    listen,
 
-    const { name, version } = this.config.config;
-
-    this.name = name;
-    this.version = version;
-    this.logger.prefix = name;
-
-    this.addEventListener();
-  }
-
-  async listen({ port }: { port?: number } = {}) {
-    await this.setup();
-    const listenPort = port ?? this.options?.port ?? 8000;
-    return this.app?.listen({ port: listenPort });
-  }
+    config,
+    logger,
+    oakApp,
+  };
 }

@@ -1,3 +1,2 @@
-// import "./cli/main.ts";
-import "./utils/main.ts";
-// import "./svc/main.ts";
+import "./svc-hello/main.ts"
+// import "./svc-crud/main.ts"
