@@ -1,10 +1,13 @@
 import { Application, Context, Logger, oakCors, Router } from "../deps.ts";
 import { ServiceConfig, ServiceConfigOptions } from "./config.ts";
-import { EventHandler } from "./event.ts";
+import {
+  defineEventHandler,
+  EventHandler,
+  EventHandlerOptions,
+} from "./event.ts";
 import { middlewareError } from "../middleware/error.ts";
 export interface defineServiceOptions extends ServiceConfigOptions {
   eventHandlers?: EventHandler[];
-  eventHandler?: EventHandler;
   dbClient?: any;
 }
 
@@ -34,7 +37,9 @@ function addEventHandler({
   );
   oakApp.use(router.routes());
   oakApp.use(router.allowedMethods());
-  logger.debug("[defineService]", "eventHandler added", { path: eventHandler.path });
+  logger.debug("[defineService]", "eventHandler added", {
+    path: eventHandler.path,
+  });
 }
 export async function defineService(options: defineServiceOptions) {
   let {
@@ -44,7 +49,6 @@ export async function defineService(options: defineServiceOptions) {
     port,
     logLevel,
     eventHandlers = [],
-    eventHandler,
     dbClient,
   } = options;
 
@@ -71,16 +75,9 @@ export async function defineService(options: defineServiceOptions) {
   oakApp.use(oakCors());
   oakApp.use(middlewareError);
 
-  // Setup event handlers
-  eventHandlers.forEach((e) =>
-    addEventHandler({ eventHandler: e, logger, oakApp })
-  );
-
-  if (eventHandler) addEventHandler({ eventHandler, logger, oakApp });
-
   // Add event listener
   oakApp.addEventListener("listen", ({ port, secure, hostname, timeStamp }) => {
-    const { name, version } = config;
+    const { name, version, options, ...configData } = config;
 
     const host = hostname === "0.0.0.0" ? "localhost" : hostname;
     const protocol = secure ? "https" : "http";
@@ -95,15 +92,25 @@ export async function defineService(options: defineServiceOptions) {
       protocol,
       url,
     };
-    logger.debug("[service.listen]", "service config", { config });
+    logger.debug("[service.listen]", "service config", {
+      config: { name, version, ...configData },
+    });
     logger.info("[service.listen]", "service listening data", { service });
   });
 
   // Create listen function
   const listen = async (listenPort?: number) => {
+    // Setup event handlers
+    eventHandlers.forEach((e) =>
+      addEventHandler({ eventHandler: e, logger, oakApp })
+    );
     const port = listenPort ?? config.port;
     return oakApp.listen({ port });
   };
 
-  return { listen, config, logger, oakApp };
+  return { listen, config, logger, oakApp, eventHandlers };
+}
+
+export function defineServiceHandler(options: EventHandlerOptions) {
+  return defineService({ eventHandlers: [defineEventHandler(options)] });
 }
