@@ -6,7 +6,6 @@ export interface ServiceConfigOptions {
   environment?: string;
   port?: number;
   logLevel?: LogLevels;
-  routes?: any[];
 }
 
 export const defaultServiceConfig = {
@@ -15,7 +14,6 @@ export const defaultServiceConfig = {
   environment: "stage",
   port: 8000,
   logLevel: 0,
-  routes: [],
 };
 
 export class ServiceConfig {
