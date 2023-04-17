@@ -1,4 +1,3 @@
-// Import Colors module from the deno standard library and define the ILogger interface
 import { Colors } from "./deps.ts";
 
 interface LoggerInterface {

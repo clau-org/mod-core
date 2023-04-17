@@ -92,11 +92,5 @@ export async function defineService(options: defineServiceOptions) {
     return oakApp.listen({ port });
   };
 
-  return {
-    listen,
-
-    config,
-    logger,
-    oakApp,
-  };
+  return { listen, config, logger, oakApp };
 }

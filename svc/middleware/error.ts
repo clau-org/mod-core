@@ -1,6 +1,6 @@
 import { defineMiddleware } from "./middleware.ts";
 
-const middlewareError = defineMiddleware(async (_ctx, next) => {
+export const middlewareError = defineMiddleware(async (_ctx, next) => {
   const { logger, ctx } = _ctx;
   try {
     await next();
@@ -16,5 +16,3 @@ const middlewareError = defineMiddleware(async (_ctx, next) => {
     };
   }
 });
-
-export { middlewareError };

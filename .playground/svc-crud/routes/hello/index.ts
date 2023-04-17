@@ -4,9 +4,7 @@ import middlewareHello from "../../middlewares/hello.ts";
 
 export default defineEventHandler({
   path: "/",
-  schema: z.object({
-    hello: z.string().nullish(),
-  }),
+  schema: z.object({ hello: z.string().nullish() }),
   middlewares: [middlewareHello],
   handler: async (ctx) => {
     const { config, event, logger, db } = ctx as ServiceContext;

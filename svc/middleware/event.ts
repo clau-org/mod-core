@@ -1,7 +1,7 @@
 import { getQuery, Schema, ZodError } from "../deps.ts";
 import { defineMiddleware } from "./middleware.ts";
 
-function middlewareGetEvent(schema?: Schema) {
+export function middlewareGetEvent(schema?: Schema) {
   const middleware = defineMiddleware(async (_ctx, next) => {
     const { logger, ctx } = _ctx;
 
@@ -31,6 +31,3 @@ function middlewareGetEvent(schema?: Schema) {
   });
   return middleware;
 }
-
-// Export the validate function
-export { middlewareGetEvent };
