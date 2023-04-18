@@ -22,4 +22,4 @@ const service = await defineServiceHandler({
   },
 });
 
-export { service };
+service.listen();
