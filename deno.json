@@ -12,7 +12,7 @@
   "fmt": {
     "files": {
       "exclude": [
-        "**/database/generated"
+        ".playground/svc-crud/database/generated"
       ]
     }
   }
