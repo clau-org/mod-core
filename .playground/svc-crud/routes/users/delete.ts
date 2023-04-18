@@ -1,4 +1,10 @@
-import { defineEventHandler, Handler, z, schemaIds, middlewareDbExist } from "../../deps.ts";
+import {
+  defineEventHandler,
+  Handler,
+  middlewareDbExist,
+  schemaIds,
+  z,
+} from "../../deps.ts";
 import { ServiceContext } from "../../service.ts";
 
 export const path = "/users/delete";
