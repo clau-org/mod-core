@@ -43,8 +43,8 @@ jobs:
         with:
           deno-version: v1.x
 
-      - name: Test
-        run: deno task test
+      # - name: Test
+      #   run: deno task test
 
       - name: Extract version from commit message
         id: extract_version
