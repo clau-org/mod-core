@@ -3,10 +3,12 @@ import {
   Handler,
   middlewareDbUnique,
   z,
-} from "../../deps.ts";
+} from "../../../deps.ts";
 import { ServiceContext } from "../../service.ts";
+import { createUser } from "../../modules/users/create.ts";
 
 export const path = "/users/create";
+
 export const schema = z.object({
   email: z.string().email(),
   name: z.string().nullish(),
@@ -14,12 +16,13 @@ export const schema = z.object({
 }).strict();
 
 const validateUnique = middlewareDbUnique("users", "email");
+
 export const middlewares = [validateUnique];
 
 export const handler: Handler = async (ctx) => {
   const { event, db, logger } = ctx as ServiceContext;
 
-  const user = await db.users.create({ data: event });
+  const user = await createUser({ data: event, db });
 
   logger.log(`[${path}]`, "user created");
 

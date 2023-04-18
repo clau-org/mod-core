@@ -4,29 +4,27 @@ import {
   middlewareDbExist,
   schemaIds,
   z,
-} from "../../deps.ts";
+} from "../../../deps.ts";
 import { ServiceContext } from "../../service.ts";
-import { schema as schemaCreate } from "./create.ts";
+import { deleteUser } from "../../modules/users/delete.ts";
 
-export const path = "/users/update";
-export const schema = z.object({ ...schemaIds }).merge(schemaCreate.partial());
+export const path = "/users/delete";
+export const schema = z.object({ ...schemaIds });
 
 const validateExist = middlewareDbExist("users", { varKey: "user" });
 export const middlewares = [validateExist];
 
 export const handler: Handler = async (ctx) => {
   const { event, db, logger } = ctx as ServiceContext;
-  let { user, id, uuid, ...userData } = event;
+  let { user } = event;
 
   if (!user) return { data: { user } };
 
-  user = await db!.users.update({
-    where: { id: user.id },
-    data: { ...userData },
-  });
+  user = await deleteUser({ db, uuid: user.uuid });
 
-  logger.log(`[${path}]`, "users updated");
+  logger.log(`${path}`, "user deleted");
 
   return { data: { user } };
 };
+
 export default defineEventHandler({ path, schema, middlewares, handler });
