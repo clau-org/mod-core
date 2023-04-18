@@ -2,7 +2,7 @@ import { getQuery, Schema, ZodError } from "../deps.ts";
 import { defineMiddleware } from "./middleware.ts";
 
 export function middlewareGetEvent(schema?: Schema) {
-  const middleware = defineMiddleware(async (_ctx, next) => {
+  return defineMiddleware(async (_ctx, next) => {
     const { logger, ctx } = _ctx;
 
     try {
@@ -29,5 +29,4 @@ export function middlewareGetEvent(schema?: Schema) {
       } else throw error;
     }
   });
-  return middleware;
 }

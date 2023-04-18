@@ -8,6 +8,7 @@ export const middlewareError = defineMiddleware(async (_ctx, next) => {
     logger.critical("[middleware: middlewareError]", { error });
     ctx.response.status = error.status || 500;
     ctx.response.body = {
+      message: error.message,
       error: {
         error,
         message: error.message,
