@@ -1,54 +1,46 @@
-import { Context, Middleware } from "../../deps.ts";
-import { DefaultServiceState } from "../../mod.ts";
+import { defineMiddleware } from "../middleware.ts";
 
-// Define middleware to validate that user exists
 const middlewareDbExist = (
   modelName: string,
   {
-    message,
+    message: customMessage,
     varKey,
-    varDb,
   }: {
     message?: string;
     varKey?: string;
-    varDb?: string;
   } = {},
 ) => {
-  const middleware: Middleware = async (
-    ctx: Context,
-    next: any,
-  ) => {
-    const { logger } = ctx.app.state as DefaultServiceState;
-    const db = ctx.app.state[ varDb ?? 'db' ]
-    const model = db![modelName]
-    const { uuid, id } = ctx.state.requestData;
+  return defineMiddleware(async (_ctx, next) => {
+    const { event, logger, db, ctx } = _ctx;
+    const model = db![modelName];
+    const { uuid, id } = event;
 
     const document = await model.findFirst({
-      where: {
-        OR: [{ uuid }, { id }],
-      },
+      where: { OR: [{ uuid }, { id }] },
     });
 
     const documentDoesntExist = !document;
     const isExpected = id || uuid;
 
     if (documentDoesntExist && isExpected) {
+      const message = customMessage ?? `${modelName} doesn't exist.`;
       ctx.response.status = 404;
       ctx.response.body = {
-        message: message ?? `${modelName} doesn't exist.`,
-        uuid,
-        id,
+        message,
+        error: { message, data: { uuid, id } },
       };
-      logger.debug(`[middleware: validateExist][${modelName} doesn't exist]`);
-      return;
+
+      return logger.debug(
+        `[middleware: validateExist][${modelName} doesn't exist]`,
+      );
     }
 
-    ctx.state[varKey ?? modelName] = document;
-    logger.debug(`[middleware: validateExist][${modelName} exists]`);
+    ctx.state.event[varKey ?? modelName] = document;
+
+    logger.debug("[middleware: validateExist]", `[${modelName} exists]`);
 
     await next();
-  };
-  return middleware;
+  });
 };
 
 export { middlewareDbExist };

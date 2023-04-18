@@ -1,3 +1,3 @@
-export * as UTILS from "./utils/mod.ts";
-export * as SERVICE from "./svc/mod.ts";
-export * as CLI from "./cli/mod.ts";
+export * from "./utils/mod.ts";
+export * from "./svc/mod.ts";
+export * from "./cli/mod.ts";

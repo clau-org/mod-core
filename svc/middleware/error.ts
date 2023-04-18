@@ -1,18 +1,19 @@
-import { Middleware } from "../deps.ts";
+import { defineMiddleware } from "./middleware.ts";
 
-const middlewareError: Middleware = async (ctx, next) => {
-  const { logger } = ctx.app.state;
+export const middlewareError = defineMiddleware(async (_ctx, next) => {
+  const { logger, ctx } = _ctx;
   try {
     await next();
   } catch (error) {
-    logger.critical("[middleware: errorHandler]", { error });
+    logger.critical("[middleware: middlewareError]", { error });
     ctx.response.status = error.status || 500;
     ctx.response.body = {
-      error,
       message: error.message,
-      stack: error.stack,
+      error: {
+        error,
+        message: error.message,
+        stack: error.stack,
+      },
     };
   }
-};
-
-export { middlewareError };
+});

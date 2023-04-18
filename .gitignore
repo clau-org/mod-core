@@ -1,8 +1,5 @@
 # general
 package-lock.json
-framework
-dist
-.output
 .env
 *.log
 

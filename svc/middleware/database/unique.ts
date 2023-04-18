@@ -1,60 +1,48 @@
-import { Context, Middleware } from "../../deps.ts";
-import { DefaultServiceState } from "../../mod.ts";
+import { defineMiddleware } from "../middleware.ts";
 
-// Define middleware to validate that user exists
 const middlewareDbUnique = (
   modelName: string,
   keyName: string,
   {
-    message,
-    varDb,
+    message: customMessage,
     varRequest,
     varDbField,
   }: {
     message?: string;
-    varDb?: string;
     varRequest?: string;
     varDbField?: string;
   } = {},
 ) => {
-  const middleware: Middleware = async (
-    ctx: Context,
-    next: any,
-  ) => {
-    const { logger } = ctx.app.state as DefaultServiceState;
-    const db = ctx.app.state[ varDb ?? 'db' ]
-    const model = db![modelName]
-    const keyRequest = varRequest ?? keyName
-    const keyDb = varDbField ?? keyName
-    const keyRequestData = ctx.state.requestData[keyRequest]
+  return defineMiddleware(async (_ctx, next) => {
+    const { event, logger, db, ctx } = _ctx;
+    const model = db[modelName];
+    const keyRequest = varRequest ?? keyName;
+    const keyDb = varDbField ?? keyName;
+    const keyRequestData = event[keyRequest];
 
     const document = await model.findFirst({
-      where: {
-        [`${keyDb}`]:keyRequestData,
-      },
+      where: { [`${keyDb}`]: keyRequestData },
     });
 
     const documentIsNotUnique = document;
 
     if (documentIsNotUnique) {
-      ctx.response.status = 404;
+      const message = customMessage ?? `Document is not unique.`;
+      ctx.response.status = 400;
       ctx.response.body = {
-        data: {
-          keyRequest,
-          keyDb,
-          keyRequestData,
-        },
-        message: message ?? `Document is not unique.`
+        message,
+        error: { message, data: { keyRequest, keyDb, keyRequestData } },
       };
-      logger.debug('[middleware: validateExist]','[Document is not unique]');
-      return;
+      return logger.debug(
+        "[middleware: validateExist]",
+        "Document is not unique",
+      );
     }
 
-    logger.debug('[middleware: validateExist]','[Document is unique]');
+    logger.debug("[middleware: validateExist]", "Document is unique");
 
     await next();
-  };
-  return middleware;
+  });
 };
 
 export { middlewareDbUnique };
