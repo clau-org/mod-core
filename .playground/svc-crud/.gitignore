@@ -21,4 +21,4 @@ nuxt.d.ts
 .history
 
 # service
-src/database/generated
+# src/database/generated
