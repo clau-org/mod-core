@@ -1,0 +1,45 @@
+[
+  {
+    "_id": "31f3d438-3fd4-4554-b3a0-4048b177e3b6",
+    "colName": "svc-crud",
+    "created": "2023-04-19T05:48:01.209Z",
+    "sortNum": 10000,
+    "folders": [
+      {
+        "_id": "c60e87ba-dd73-4809-a574-802bff2e7b1a",
+        "name": "users",
+        "containerId": "",
+        "created": "2023-04-19T19:20:13.493Z",
+        "sortNum": 40000
+      },
+      {
+        "_id": "46cc75d0-9801-428d-83c4-ec3af571856d",
+        "name": "create",
+        "containerId": "c60e87ba-dd73-4809-a574-802bff2e7b1a",
+        "created": "2023-04-19T19:20:53.982Z",
+        "sortNum": 50000
+      },
+      {
+        "_id": "5b11ac22-1785-4bcf-8844-f5753015c561",
+        "name": "read",
+        "containerId": "c60e87ba-dd73-4809-a574-802bff2e7b1a",
+        "created": "2023-04-19T19:22:00.208Z",
+        "sortNum": 60000
+      },
+      {
+        "_id": "b2df54b5-4afe-4fd4-984f-bd9caed41521",
+        "name": "update",
+        "containerId": "c60e87ba-dd73-4809-a574-802bff2e7b1a",
+        "created": "2023-04-19T19:22:02.341Z",
+        "sortNum": 70000
+      },
+      {
+        "_id": "ebce8f5f-60a6-41bc-844b-94d8ee8b15a5",
+        "name": "delete",
+        "containerId": "c60e87ba-dd73-4809-a574-802bff2e7b1a",
+        "created": "2023-04-19T19:22:04.507Z",
+        "sortNum": 80000
+      }
+    ]
+  }
+]

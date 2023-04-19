@@ -1,0 +1,96 @@
+[
+  {
+    "_id": "f706b930-1f8a-45f3-94e3-e09f404b2a1a",
+    "colId": "31f3d438-3fd4-4554-b3a0-4048b177e3b6",
+    "containerId": "46cc75d0-9801-428d-83c4-ec3af571856d",
+    "name": "create",
+    "url": "{{host}}/users/create?email=some@email.com",
+    "method": "GET",
+    "sortNum": 40000,
+    "created": "2023-04-19T19:20:59.893Z",
+    "modified": "2023-04-19T19:21:31.903Z",
+    "headers": [],
+    "params": [
+      {
+        "name": "email",
+        "value": "some@email.com",
+        "isPath": false
+      }
+    ],
+    "tests": []
+  },
+  {
+    "_id": "df10dfb5-8819-4b5d-9220-48d498612e57",
+    "colId": "31f3d438-3fd4-4554-b3a0-4048b177e3b6",
+    "containerId": "5b11ac22-1785-4bcf-8844-f5753015c561",
+    "name": "all",
+    "url": "{{host}}/users/read",
+    "method": "GET",
+    "sortNum": 40000,
+    "created": "2023-04-19T19:22:00.208Z",
+    "modified": "2023-04-19T19:27:02.630Z",
+    "headers": [],
+    "params": [],
+    "tests": []
+  },
+  {
+    "_id": "4baafcae-02c2-48e1-9fcf-ac2f5fb8b721",
+    "colId": "31f3d438-3fd4-4554-b3a0-4048b177e3b6",
+    "containerId": "b2df54b5-4afe-4fd4-984f-bd9caed41521",
+    "name": "update",
+    "url": "{{host}}/users/update?uuid=88a1f713-929e-43e3-8a11-237bde838484",
+    "method": "GET",
+    "sortNum": 40000,
+    "created": "2023-04-19T19:22:02.341Z",
+    "modified": "2023-04-19T19:28:12.415Z",
+    "headers": [],
+    "params": [
+      {
+        "name": "uuid",
+        "value": "88a1f713-929e-43e3-8a11-237bde838484",
+        "isPath": false
+      }
+    ],
+    "tests": []
+  },
+  {
+    "_id": "6e40548a-958d-4ee3-acc5-12b0960fc3b4",
+    "colId": "31f3d438-3fd4-4554-b3a0-4048b177e3b6",
+    "containerId": "ebce8f5f-60a6-41bc-844b-94d8ee8b15a5",
+    "name": "delete",
+    "url": "{{host}}/users/delete?uuid=88a1f713-929e-43e3-8a11-237bde838484",
+    "method": "GET",
+    "sortNum": 40000,
+    "created": "2023-04-19T19:22:04.507Z",
+    "modified": "2023-04-19T19:28:26.756Z",
+    "headers": [],
+    "params": [
+      {
+        "name": "uuid",
+        "value": "88a1f713-929e-43e3-8a11-237bde838484",
+        "isPath": false
+      }
+    ],
+    "tests": []
+  },
+  {
+    "_id": "21ccf2e3-64b0-4cf3-821d-dcd365081253",
+    "colId": "31f3d438-3fd4-4554-b3a0-4048b177e3b6",
+    "containerId": "5b11ac22-1785-4bcf-8844-f5753015c561",
+    "name": "one",
+    "url": "{{host}}/users/read?uuid=88a1f713-929e-43e3-8a11-237bde838484",
+    "method": "GET",
+    "sortNum": 50000,
+    "created": "2023-04-19T19:22:42.181Z",
+    "modified": "2023-04-19T19:27:23.808Z",
+    "headers": [],
+    "params": [
+      {
+        "name": "uuid",
+        "value": "88a1f713-929e-43e3-8a11-237bde838484",
+        "isPath": false
+      }
+    ],
+    "tests": []
+  }
+]
