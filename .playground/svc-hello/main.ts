@@ -1,4 +1,4 @@
-import { defineServiceHandler } from "https://raw.githubusercontent.com/clau-org/mod-core/cleanup/svc/mod.ts";
+import { defineServiceHandler } from "https://raw.githubusercontent.com/clau-org/mod-core/v0.0.11/mod.ts";
 import z from "https://deno.land/x/zod@v3.21.4/index.ts";
 
 const service = await defineServiceHandler({
