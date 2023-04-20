@@ -19,6 +19,7 @@ const middlewareDbUnique = (
     const keyRequest = varRequest ?? keyName;
     const keyDb = varDbField ?? keyName;
     const keyRequestData = event[keyRequest];
+    const isExpectedRequestData = !!keyRequestData;
 
     const document = await model.findFirst({
       where: { [`${keyDb}`]: keyRequestData },
@@ -26,7 +27,7 @@ const middlewareDbUnique = (
 
     const documentIsNotUnique = document;
 
-    if (documentIsNotUnique) {
+    if (documentIsNotUnique && isExpectedRequestData) {
       const message = customMessage ?? `Document is not unique.`;
       ctx.response.status = 400;
       ctx.response.body = {
